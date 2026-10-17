@@ -1,0 +1,118 @@
+{
+  "name": "Sample Fresher",
+  "email": "sample.fresher@example.com",
+  "phone": "+91 98765 43210",
+  "location": "Hyderabad, Telangana, India",
+  "openTo": ["Hyderabad", "Bengaluru", "Pune", "Remote"],
+  "education": {
+    "degree": "B.Tech in Computer Science & Engineering",
+    "institution": "National Institute of Technology",
+    "location": "Hyderabad",
+    "batch": "2025 / 2026",
+    "aggregate": "8.2 CGPA",
+    "coursework": [
+      "Data Structures & Algorithms",
+      "Object-Oriented Programming (OOP)",
+      "Database Management Systems (DBMS)",
+      "Machine Learning",
+      "Computer Networks",
+      "Cyber Security & Cryptography"
+    ]
+  },
+  "technicalSkills": {
+    "languages": ["Python", "C", "Java (Fundamentals)", "SQL"],
+    "frameworks": ["Flask", "Django", "NumPy", "Pandas", "Matplotlib", "YOLOv8", "LSTM"],
+    "databases": ["MySQL", "PostgreSQL", "SQLite"],
+    "tools": ["Git", "GitHub", "Linux CLI", "Jupyter Notebook", "VS Code", "Postman", "Excel"],
+    "domains": ["Computer Vision", "Object Detection", "Traffic Forecasting", "Security Operations", "Data Automation"]
+  },
+  "certifications": [
+    {
+      "name": "Google IT Automation with Python Professional Certificate",
+      "issuer": "Google / Coursera"
+    },
+    {
+      "name": "Python for Data Science & Machine Learning",
+      "issuer": "Coursera / Udemy"
+    }
+  ],
+  "projects": [
+    {
+      "title": "Smart Traffic Vision System (LSTM + YOLO Vehicle Tracking)",
+      "description": "Hybrid LSTM + YOLO framework for predictive traffic forecasting and adaptive vehicle routing.",
+      "techStack": ["Python", "YOLOv8", "LSTM", "OpenCV", "NumPy", "Matplotlib"],
+      "metrics": "92.4% vehicle detection precision, 35% latency reduction in simulated emergency rerouting."
+    },
+    {
+      "title": "Automated Data Processing & Analytics Pipeline",
+      "description": "Automated data cleaning and visualization pipeline reducing manual preparation time.",
+      "techStack": ["Python", "Pandas", "NumPy", "Matplotlib"],
+      "metrics": "Processed 100K+ records, 50% turnaround time reduction."
+    },
+    {
+      "title": "Web-Based Task Management Application",
+      "description": "Full-stack task manager implementing complete CRUD operations with relational database persistence.",
+      "techStack": ["Python", "Flask", "SQLite", "HTML/CSS", "REST APIs"],
+      "metrics": "Sub-100ms response time, persistent user task storage."
+    },
+    {
+      "title": "Interactive Web Platforms",
+      "description": "Online ordering application and personal developer portfolio deployed live on GitHub Pages.",
+      "techStack": ["HTML5", "CSS3", "JavaScript", "GitHub Pages"],
+      "links": [
+        "https://github.com/sample-fresher/online-order",
+        "https://github.com/sample-fresher/portfolio"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "company": "Dexterity Private Ltd",
+      "role": "Team Lead / Business Development Trainee",
+      "location": "Hyderabad",
+      "period": "Jun 2024 - Nov 2024",
+      "responsibilities": [
+        "Supervised a cohort of 6 trainees across market research, lead qualification, and strategic client outreach initiatives.",
+        "Synthesized outreach metrics using Python and Excel, presenting weekly performance analytics dashboards to senior leadership.",
+        "Improved lead qualification efficiency by 22% through standardized workflow tracking."
+      ]
+    }
+  ],
+  "targetRoles": [
+    {
+      "title": "Python Software Development Engineer (SDE) / Trainee",
+      "fitScore": 94,
+      "seniority": "Fresher / Entry-Level (0-1 Years)",
+      "companies": ["Accenture", "Cognizant", "LTIMindtree", "TCS", "Zoho", "Persistent"],
+      "rationale": "High mastery of Python OOP, REST APIs via Flask, and relational SQL matching MNC fresher syllabi."
+    },
+    {
+      "title": "Junior AI & Machine Learning / Computer Vision Engineer",
+      "fitScore": 91,
+      "seniority": "Fresher / Trainee (0-1 Years)",
+      "companies": ["Bosch (BGSW)", "Fractal Analytics", "Tiger Analytics", "Jio Platforms AI"],
+      "rationale": "Deep Traffic-VTS project (YOLO + LSTM) provides rare practical computer vision and deep learning experience."
+    },
+    {
+      "title": "Junior Cyber Security Analyst / SOC Analyst (Tier 1)",
+      "fitScore": 90,
+      "seniority": "Fresher / Associate (0-1 Years)",
+      "companies": ["Cisco Systems", "IBM Security", "Kyndryl", "EY India", "Wipro CyberShield"],
+      "rationale": "Direct B.Tech Cyber Security degree alignment combined with Linux and Python automation scripting."
+    },
+    {
+      "title": "Data Analyst / Python Automation Engineer",
+      "fitScore": 88,
+      "seniority": "Fresher / Trainee (0-1 Years)",
+      "companies": ["Fractal Analytics", "Tiger Analytics", "Mu Sigma", "Capgemini", "Tech Mahindra"],
+      "rationale": "Certified in Python for Data Science and Google IT Automation, with real-world 50% data processing time reduction."
+    },
+    {
+      "title": "Junior Backend / API Developer",
+      "fitScore": 86,
+      "seniority": "Fresher / Intern (0-1 Years)",
+      "companies": ["Zoho", "HackerEarth", "Virtusa", "Razorpay", "PhonePe"],
+      "rationale": "Hands-on experience developing RESTful Flask web applications with SQLite and MySQL databases."
+    }
+  ]
+}
