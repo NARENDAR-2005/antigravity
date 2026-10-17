@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FresherLaunch — Resume Checker & Job Matcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF8E7;
+  --surface:#FFF8E7;
+  --card:#F5EBD6;
+  --border:#141414;
+  --ink:#141414;
+  --primary:#FFD12E;
+  --pink:#FF3E8A;
+  --mint:#00E5A3;
+  --coral:#FF4F2E;
+  --sky:#38BDF8;
+  --green:#00E5A3;
+  --red:#FF3E8A;
+  --amber:#FFD12E;
+  --text:#141414;
+  --muted:#4A4A4A;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:16px;overflow-x:hidden}
+h1,h2,h3,.welcome-title,.rh-title,.profile-name,.ats-meta-title,.analyzing-title{font-family:'Space Grotesk',sans-serif}
+#particles-canvas{display:none}
+.screen{position:relative;z-index:1;min-height:100vh;display:none;flex-direction:column;background:var(--bg)}
+.screen.active{display:flex}
+
+/* ── WELCOME (NEO-BRUTALIST WARM OFF-WHITE THEME + LETTER IN/OUT + BLAST) ── */
+#screen-welcome{align-items:center;justify-content:center;background:var(--bg);
+  background-image:radial-gradient(#141414 1px, transparent 1px);
+  background-size:24px 24px;}
+.welcome-inner{text-align:center;max-width:860px;padding:40px 20px;display:flex;flex-direction:column;align-items:center;position:relative}
+.welcome-badge{display:inline-flex;align-items:center;gap:10px;background:#FFD12E;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;margin-bottom:24px;animation:fadeSlideDown 0.8s ease forwards;transition:all 0.15s ease}
+.welcome-badge:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 #141414}
+.welcome-badge-inner{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;font-size:13px;letter-spacing:1px;color:#141414;text-transform:uppercase;font-weight:800;font-family:'JetBrains Mono',monospace}
+.badge-dot{width:8px;height:8px;border-radius:50%;background:#FF3E8A;border:2px solid #141414}
+.welcome-title-wrap{position:relative;margin-bottom:14px;padding:12px;cursor:pointer;user-select:none}
+.welcome-title{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;font-size:clamp(38px,7.5vw,78px);font-weight:900;line-height:1.05;letter-spacing:-1px}
+.word-group{display:inline-flex;gap:6px;margin:4px 8px}
+.blast-letter{display:inline-flex;align-items:center;justify-content:center;padding:4px 12px;border-radius:12px;border:3px solid #141414;box-shadow:4px 4px 0px #141414;font-weight:900;opacity:0;animation:letterInOutBlast 1.45s cubic-bezier(0.22,1,0.36,1) forwards;transition:transform 0.15s ease}
+.blast-letter:hover{transform:translateY(-6px) scale(1.15) rotate(-4deg)!important}
+@keyframes letterInOutBlast{
+  0%{opacity:0;transform:translateY(-80px) scale(0) rotate(-25deg)}
+  30%{opacity:1;transform:translateY(0) scale(1.25) rotate(6deg)}
+  58%{opacity:0.85;transform:translateY(22px) scale(0.52) rotate(-10deg)}
+  82%{opacity:1;transform:translateY(-16px) scale(1.42) rotate(8deg);filter:brightness(1.1)}
+  100%{opacity:1;transform:translateY(0) scale(1) rotate(0deg)}
+}
+@media (prefers-reduced-motion: reduce) {
+  .blast-letter { opacity: 1 !important; animation: none !important; transform: none !important; }
+  .blast-ring, .blast-particle { display: none !important; animation: none !important; }
+  .welcome-sub, .typewriter-line, .drop-zone-wrapper, .welcome-footer { opacity: 1 !important; animation: none !important; transform: none !important; }
+}
+.blast-ring{position:absolute;left:50%;top:50%;width:160px;height:160px;margin-left:-80px;margin-top:-80px;border-radius:50%;border:4px solid #141414;pointer-events:none;opacity:0;transform:scale(0.1)}
+.blast-ring.active{animation:shockwaveRing 0.9s ease-out forwards}
+@keyframes shockwaveRing{0%{opacity:1;transform:scale(0.2)}100%{opacity:0;transform:scale(3.6)}}
+.blast-particle{position:absolute;left:50%;top:50%;border:2px solid #141414;box-shadow:2px 2px 0 #141414;pointer-events:none;z-index:20;animation:particleExplode 1.05s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes particleExplode{
+  0%{opacity:1;transform:translate(0,0) scale(0) rotate(0deg)}
+  25%{opacity:1;transform:translate(calc(var(--dx)*0.45),calc(var(--dy)*0.45)) scale(1.4) rotate(90deg)}
+  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0) rotate(var(--rot))}
+}
+.welcome-sub{font-size:clamp(16px,2.5vw,22px);color:#141414;font-weight:700;opacity:0;animation:fadeSlideUp 0.8s ease forwards;animation-delay:1.1s;margin-bottom:18px;line-height:1.5}
+.welcome-sub span{background:#FFD12E;color:#141414;padding:4px 12px;border-radius:12px;border:3px solid #141414;box-shadow:4px 4px 0 #141414;font-weight:800;display:inline-block}
+.typewriter-line{font-size:clamp(14px,2vw,16px);color:#141414;background:#F5EBD6;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-weight:700;margin-bottom:24px;opacity:0;animation:fadeIn 0.5s ease forwards;animation-delay:1.4s;min-height:38px;display:inline-flex;align-items:center}
+.cursor{display:inline-block;width:3px;height:1em;background:#FF3E8A;margin-left:4px;animation:blink 0.8s infinite;vertical-align:middle}
+.drop-zone-wrapper{width:100%;max-width:580px;opacity:0;transform:translateY(40px);animation:dropZoneIn 0.9s cubic-bezier(0.22,1,0.36,1) forwards;animation-delay:1.6s}
+.drop-zone{border:3px solid #141414;border-radius:12px;padding:34px 28px;background:#FFF8E7;cursor:pointer;transition:all 0.15s ease;position:relative;overflow:hidden;text-align:center;box-shadow:4px 4px 0 #141414}
+.drop-zone:hover,.drop-zone.dragover{background:#F5EBD6;transform:translate(2px,2px);box-shadow:2px 2px 0 #141414}
+.drop-icon{font-size:48px;margin-bottom:12px;display:block}
+.drop-title{font-size:20px;font-weight:800;color:#141414;margin-bottom:6px;font-family:'Space Grotesk',sans-serif}
+.drop-hint{font-size:15px;color:#4A4A4A;margin-bottom:18px;font-weight:500}
+.drop-formats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.drop-fmt{border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:4px 12px;font-size:12px;font-weight:800;letter-spacing:0.5px;color:#141414;font-family:'JetBrains Mono',monospace}
+#file-input{display:none}
+.or-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:#141414;font-size:13px;font-weight:800;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:3px;background:#141414}
+.paste-btn{width:100%;padding:12px 16px;border-radius:12px;border:3px solid #141414;background:#FFD12E;color:#141414;font-weight:800;font-size:15px;cursor:pointer;transition:all 0.15s;font-family:inherit;box-shadow:4px 4px 0 #141414}
+.paste-btn:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 #141414}
+.paste-area-wrapper{margin-top:16px;display:none}
+.paste-area-wrapper.show{display:block}
+textarea#paste-resume{width:100%;min-height:140px;background:#FFF8E7;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:14px;color:#141414;font-size:15px;font-family:'JetBrains Mono',monospace;resize:vertical;outline:none}
+.analyze-btn{width:100%;margin-top:12px;padding:14px;border-radius:12px;border:3px solid #141414;box-shadow:4px 4px 0 #141414;background:#00E5A3;color:#141414;font-size:16px;font-weight:900;cursor:pointer;transition:all 0.15s;font-family:'Space Grotesk',sans-serif;letter-spacing:0.3px}
+.analyze-btn:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 #141414}
+.upload-error{margin-top:12px;padding:12px;border-radius:12px;background:#FF3E8A;border:3px solid #141414;box-shadow:4px 4px 0 #141414;color:#FFFFFF;font-weight:700;font-size:14px;display:none}
+.welcome-footer{margin-top:26px;font-size:14px;color:#141414;font-weight:700;opacity:0;animation:fadeIn 0.5s ease forwards;animation-delay:2.2s}
+.welcome-footer span{background:#00E5A3;color:#141414;padding:3px 10px;border-radius:12px;border:3px solid #141414;box-shadow:4px 4px 0 #141414;font-weight:800}
+
+/* ── ANALYZING ── */
+#screen-analyzing{align-items:center;justify-content:center;background:var(--bg)}
+.analyzing-inner{text-align:center;max-width:500px;padding:40px 24px;background:#F5EBD6;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px}
+.analyzing-orb{width:100px;height:100px;border-radius:12px;margin:0 auto 28px;background:#FFD12E;border:3px solid #141414;box-shadow:4px 4px 0 #141414;display:flex;align-items:center;justify-content:center;position:relative}
+.orb-icon{position:relative;z-index:1;font-size:40px}
+.analyzing-title{font-size:28px;font-weight:800;margin-bottom:12px;color:#141414}
+.analyzing-step{font-size:16px;color:#141414;font-weight:600;margin-bottom:28px;min-height:24px}
+.progress-track{width:100%;height:16px;background:#FFF8E7;border:3px solid #141414;border-radius:12px;overflow:hidden}
+.progress-fill{height:100%;background:#00E5A3;width:0%;transition:width 0.4s ease}
+.step-dots{display:flex;gap:10px;justify-content:center;margin-top:24px}
+.step-dot{width:12px;height:12px;border-radius:50%;background:#FFF8E7;border:2px solid #141414;transition:all 0.3s}
+.step-dot.done{background:#00E5A3}
+.step-dot.active{background:#FFD12E;transform:scale(1.2)}
+
+/* ── RESULTS ── */
+#screen-results{background:var(--bg);padding:0}
+.results-header{background:#FFF8E7;border-bottom:3px solid #141414;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;position:sticky;top:0;z-index:100}
+.rh-brand{display:flex;align-items:center;gap:12px}
+.rh-logo{width:42px;height:42px;border-radius:12px;background:#FFD12E;border:3px solid #141414;box-shadow:4px 4px 0 #141414;display:flex;align-items:center;justify-content:center;font-size:20px}
+.rh-title{font-size:20px;font-weight:800;letter-spacing:-0.5px;color:#141414}
+.rh-subtitle{font-size:13px;color:#4A4A4A;font-weight:700;font-family:'JetBrains Mono',monospace}
+.rh-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.btn-pill{padding:10px 18px;border-radius:12px;border:3px solid #141414;box-shadow:4px 4px 0 #141414;background:#FFF8E7;color:#141414;font-size:14px;font-weight:800;cursor:pointer;transition:all 0.15s;font-family:inherit}
+.btn-pill:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 #141414;background:#F5EBD6}
+.btn-primary-pill{background:#FFD12E;color:#141414;font-weight:800}
+.btn-primary-pill:hover{background:#FFD12E;color:#141414}
+.results-body{max-width:1200px;margin:0 auto;padding:32px 24px}
+
+/* TABS */
+.tabs{display:flex;gap:10px;border-bottom:3px solid #141414;padding-bottom:14px;margin-bottom:32px;overflow-x:auto}
+.tab-btn{padding:10px 18px;border:3px solid #141414;box-shadow:4px 4px 0 #141414;background:#FFF8E7;color:#141414;font-size:15px;font-weight:800;cursor:pointer;transition:all 0.15s;white-space:nowrap;font-family:'Space Grotesk',sans-serif;border-radius:12px}
+.tab-btn:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 #141414;background:#F5EBD6}
+.tab-btn.active{background:#FFD12E;color:#141414}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* Profile */
+.profile-card{background:#FFF8E7;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:28px;margin-bottom:28px;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}
+@media(max-width:600px){.profile-card{grid-template-columns:1fr;text-align:center}}
+.profile-avatar{width:80px;height:80px;border-radius:12px;background:#FFD12E;border:3px solid #141414;box-shadow:4px 4px 0 #141414;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#141414;flex-shrink:0;margin:0 auto;font-family:'Space Grotesk',sans-serif}
+.profile-name{font-size:30px;font-weight:900;margin-bottom:6px;color:#141414}
+.profile-role{font-size:14px;color:#141414;font-weight:800;margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+.profile-meta{display:flex;gap:12px;flex-wrap:wrap}
+.profile-meta-item{font-size:14px;color:#141414;background:#F5EBD6;border:3px solid #141414;border-radius:12px;padding:4px 12px;display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-weight:700}
+
+/* ATS Gauge */
+.ats-hero{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:start;margin-bottom:36px;background:#FFF8E7;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:28px}
+@media(max-width:700px){.ats-hero{grid-template-columns:1fr}}
+.score-gauge{position:relative;width:180px;height:180px;flex-shrink:0;margin:0 auto}
+.score-gauge svg{transform:rotate(-90deg)}
+.gauge-track{fill:none;stroke:#F5EBD6;stroke-width:14}
+.gauge-fill{fill:none;stroke-width:14;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(0.22,1,0.36,1)}
+.gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge-score{font-size:42px;font-weight:900;line-height:1;color:#141414;font-family:'JetBrains Mono',monospace}
+.gauge-label{font-size:12px;color:#141414;font-weight:800;margin-top:4px;letter-spacing:1px;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+.gauge-grade{font-size:12px;font-weight:800;margin-top:6px;padding:3px 10px;border-radius:12px;font-family:'JetBrains Mono',monospace}
+.ats-meta{display:flex;flex-direction:column;gap:12px}
+.ats-meta-title{font-size:26px;font-weight:800;color:#141414}
+.ats-meta-sub{font-size:16px;color:#141414;line-height:1.6}
+.ats-quick-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:8px}
+.qs-card{background:#F5EBD6;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:14px;text-align:center}
+.qs-val{font-size:24px;font-weight:800;display:block;color:#141414;font-family:'JetBrains Mono',monospace}
+.qs-key{font-size:12px;color:#141414;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;margin-top:4px;display:block;font-family:'JetBrains Mono',monospace}
+
+/* Section checks */
+.section-checks{display:flex;flex-direction:column;gap:14px;margin-bottom:28px}
+.check-row{display:flex;align-items:flex-start;gap:14px;background:#FFF8E7;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:16px 18px}
+.check-icon{width:34px;height:34px;border-radius:12px;border:3px solid #141414;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0;color:#141414}
+.check-icon.pass{background:#00E5A3;color:#141414}
+.check-icon.warn{background:#FFD12E;color:#141414}
+.check-icon.fail{background:#FF3E8A;color:#FFFFFF}
+.check-text{flex:1}
+.check-label{font-weight:800;font-size:16px;margin-bottom:4px;color:#141414}
+.check-detail{font-size:15px;color:#141414;line-height:1.5}
+.check-badge{margin-left:auto;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:800;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+
+/* Recs */
+.rec-list{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
+.rec-item{display:flex;align-items:flex-start;gap:12px;background:#F5EBD6;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:14px 16px}
+.rec-num{width:28px;height:28px;border-radius:12px;background:#FFD12E;border:3px solid #141414;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#141414;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.rec-text{font-size:16px;line-height:1.6;color:#141414;font-weight:500}
+
+/* Before/After (What to fix, and where) */
+.ba-section{margin-bottom:28px;background:#FFF8E7;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:22px}
+.ba-section-title{font-size:18px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:#141414;font-family:'Space Grotesk',sans-serif}
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.ba-grid{grid-template-columns:1fr}}
+.ba-box{background:#F5EBD6;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:16px;display:flex;flex-direction:column}
+.ba-after{background:#E8FFF6}
+.ba-box-label{display:inline-block;align-self:flex-start;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;padding:3px 10px;border-radius:12px;border:2px solid #141414;font-family:'JetBrains Mono',monospace}
+.ba-before .ba-box-label{background:#FF3E8A;color:#FFFFFF}
+.ba-after .ba-box-label{background:#00E5A3;color:#141414}
+.ba-text{font-size:14px;line-height:1.7;color:#141414;font-family:'JetBrains Mono',monospace;white-space:pre-wrap;word-break:break-word}
+.ba-placeholder-note{margin-top:10px;padding-top:8px;border-top:2px dashed #141414;font-size:12px;font-weight:700;color:#141414;font-family:'Inter',sans-serif}
+
+/* Jobs */
+.jobs-toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:24px}
+.search-box{flex:1;min-width:200px;background:#FFF8E7;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:10px 14px;color:#141414;font-size:15px;font-family:inherit;font-weight:600;outline:none}
+.filter-select{background:#FFF8E7;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:10px 14px;color:#141414;font-size:15px;font-family:inherit;font-weight:700;outline:none;cursor:pointer}
+.jobs-count{font-size:14px;color:#141414;font-weight:800;margin-left:auto;background:#FFD12E;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:6px 12px;font-family:'JetBrains Mono',monospace}
+.jobs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.job-card{background:#FFF8E7;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:22px;transition:all 0.15s;cursor:pointer;position:relative;overflow:hidden}
+.job-card:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 #141414;background:#F5EBD6}
+.jc-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.jc-logo{width:46px;height:46px;border-radius:12px;border:3px solid #141414;background:#FFD12E;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.jc-title-block{flex:1;min-width:0}
+.jc-title{font-size:17px;font-weight:800;line-height:1.3;margin-bottom:4px;color:#141414;font-family:'Space Grotesk',sans-serif}
+.jc-company{font-size:14px;color:#4A4A4A;font-weight:700}
+.jc-score-badge{flex-shrink:0;text-align:center;background:#F5EBD6;border:3px solid #141414;border-radius:12px;padding:6px 10px}
+.jc-score-num{font-size:18px;font-weight:900;line-height:1;color:#141414;font-family:'JetBrains Mono',monospace}
+.jc-score-label{font-size:10px;color:#141414;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;font-family:'JetBrains Mono',monospace}
+.jc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.jc-tag{padding:4px 10px;border-radius:12px;font-size:12px;font-weight:800;border:2px solid #141414;color:#141414;font-family:'JetBrains Mono',monospace}
+.tag-location{background:#38BDF8;color:#141414}
+.tag-track{background:#FFD12E;color:#141414}
+.tag-salary{background:#00E5A3;color:#141414}
+.jc-summary{font-size:15px;color:#141414;line-height:1.5;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.jc-match-bar{height:8px;background:#F5EBD6;border:2px solid #141414;border-radius:12px;margin-bottom:12px;overflow:hidden}
+.jc-match-fill{height:100%;background:#00E5A3}
+.jc-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.jc-posted{font-size:12px;color:#4A4A4A;font-weight:700;font-family:'JetBrains Mono',monospace}
+.jc-apply{padding:8px 16px;border-radius:12px;border:3px solid #141414;box-shadow:4px 4px 0 #141414;background:#FFD12E;color:#141414;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.15s;font-family:'Space Grotesk',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.jc-apply:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 #141414}
+.category-chip{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;border:2px solid #141414;font-family:'JetBrains Mono',monospace}
+.cat-apply-first{background:#00E5A3;color:#141414}
+.cat-good-match{background:#FFD12E;color:#141414}
+.cat-stretch{background:#FF3E8A;color:#FFFFFF}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(20,20,20,0.65);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#FFF8E7;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;padding:32px;animation:modalIn 0.25s ease forwards}
+.modal-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:24px;padding-bottom:20px;border-bottom:3px solid #141414}
+.modal-logo{width:52px;height:52px;border-radius:12px;border:3px solid #141414;background:#FFD12E;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.modal-title{flex:1}
+.modal-title h2{font-size:20px;font-weight:800;margin-bottom:4px;color:#141414}
+.modal-title p{font-size:14px;color:#4A4A4A;font-weight:700}
+.modal-close{width:36px;height:36px;border-radius:12px;border:3px solid #141414;box-shadow:4px 4px 0 #141414;background:#FF3E8A;color:#FFFFFF;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}
+.modal-section{margin-bottom:20px}
+.modal-section-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#141414;margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+.modal-section p{font-size:16px;line-height:1.6;color:#141414}
+.skill-chips{display:flex;gap:8px;flex-wrap:wrap}
+.skill-chip{background:#00E5A3;border:2px solid #141414;border-radius:12px;padding:4px 12px;font-size:12px;color:#141414;font-weight:800;font-family:'JetBrains Mono',monospace}
+.missing-chip{background:#FFD12E;border:2px solid #141414;border-radius:12px;padding:4px 12px;font-size:12px;color:#141414;font-weight:800;font-family:'JetBrains Mono',monospace}
+.modal-apply-btn{width:100%;padding:14px;border-radius:12px;border:3px solid #141414;box-shadow:4px 4px 0 #141414;margin-top:24px;background:#FFD12E;color:#141414;font-size:16px;font-weight:800;cursor:pointer;transition:all 0.15s;font-family:'Space Grotesk',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.modal-apply-btn:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 #141414}
+
+/* Skill gap */
+.skill-gap-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:600px){.skill-gap-grid{grid-template-columns:1fr}}
+.skill-col{background:#FFF8E7;border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:18px}
+.skill-col-title{font-size:16px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:#141414;font-family:'Space Grotesk',sans-serif}
+.skill-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:2px solid #141414;font-size:15px;font-weight:700;color:#141414}
+.skill-item:last-child{border-bottom:none}
+.skill-bar-bg{width:80px;height:8px;background:#F5EBD6;border:2px solid #141414;border-radius:12px;overflow:hidden}
+.skill-bar-fill{height:100%;border-radius:12px}
+
+/* Score colors (ink-safe on light background) */
+.score-90,.score-80,.score-70,.score-60,.score-low{color:#141414}
+
+@keyframes fadeSlideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes titleReveal{from{opacity:0;transform:translateY(30px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes dropZoneIn{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes floatIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes orbSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes cardReveal{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+
+<!-- SCREEN 1: WELCOME -->
+<section class="screen active" id="screen-welcome">
+  <div class="welcome-inner">
+    <div class="welcome-badge" onclick="triggerHeroBlast()" style="cursor:pointer" title="Replay animation">
+      <div class="welcome-badge-inner"><span class="badge-dot"></span>Again! 🎉</div>
+    </div>
+
+    <div class="welcome-title-wrap" id="hero-blast-container" onclick="triggerHeroBlast()">
+      <div class="blast-ring" id="hero-blast-ring"></div>
+      <h1 class="welcome-title" id="animated-welcome-title">
+        <!-- Populated with colorful animated letters via JS -->
+      </h1>
+    </div>
+
+    <p class="welcome-sub"><span>Let's get your first job moving.</span></p>
+    <div class="typewriter-line" id="typewriter-el"><span class="cursor"></span></div>
+
+    <div class="drop-zone-wrapper">
+      <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+        <span class="drop-icon">📄</span>
+        <div class="drop-title">Drop your resume here (PDF or DOCX), or paste the text</div>
+        <div class="drop-hint">Or click to browse your computer (up to 5 MB)</div>
+        <div class="drop-formats">
+          <span class="drop-fmt" style="background:#FFD12E">PDF</span>
+          <span class="drop-fmt" style="background:#00E5A3">DOCX</span>
+          <span class="drop-fmt" style="background:#38BDF8">TXT</span>
+        </div>
+        <input type="file" id="file-input" accept=".pdf,.docx,.txt" onchange="handleFileSelect(event)"/>
+      </div>
+      <div class="upload-error" id="upload-error">We couldn't read this file. Try pasting the text instead.</div>
+      <div class="or-divider">or</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="paste-btn" style="flex:1" onclick="loadSampleFresherResume()">Try a sample resume</button>
+        <button class="paste-btn" style="flex:1;background:#FFF8E7" onclick="togglePasteArea()">Paste resume text</button>
+      </div>
+      <div class="paste-area-wrapper" id="paste-area-wrapper">
+        <textarea id="paste-resume" placeholder="Paste your full resume text here..."></textarea>
+        <button class="analyze-btn" onclick="analyzePastedResume()">Check My Resume →</button>
+      </div>
+    </div>
+    <p class="welcome-footer">🔒 <span>Your resume is never saved.</span></p>
+  </div>
+</section>
+
+<!-- SCREEN 2: ANALYZING -->
+<section class="screen" id="screen-analyzing">
+  <div class="analyzing-inner">
+    <div class="analyzing-orb"><span class="orb-icon">🧠</span></div>
+    <h2 class="analyzing-title">Reading & Scoring Your Resume</h2>
+    <p class="analyzing-step" id="analyzing-step-text">Reading candidate name, education, skills & projects...</p>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="step-dots">
+      <div class="step-dot active" id="dot-0"></div>
+      <div class="step-dot" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+      <div class="step-dot" id="dot-4"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREEN 3: RESULTS -->
+<section class="screen" id="screen-results">
+  <header class="results-header">
+    <div class="rh-brand">
+      <div class="rh-logo">🚀</div>
+      <div>
+        <div class="rh-title">FresherLaunch</div>
+        <div class="rh-subtitle" id="rh-candidate-name">Resume Analysis Complete</div>
+      </div>
+    </div>
+    <div class="rh-actions">
+      <button class="btn-pill" onclick="goToWelcome()">⬅ Upload Another Resume</button>
+      <button class="btn-primary-pill btn-pill" onclick="downloadATSResume()">⬇ Download ATS Resume</button>
+    </div>
+  </header>
+  <div class="results-body">
+    <div class="profile-card" id="profile-dossier-card">
+      <div class="profile-avatar" id="profile-avatar">?</div>
+      <div style="width:100%">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+          <span style="background:#00E5A3;color:#141414;font-weight:800;font-size:12px;padding:3px 10px;border-radius:12px;border:3px solid #141414;box-shadow:4px 4px 0 #141414;text-transform:uppercase;font-family:'JetBrains Mono',monospace">✓ Resume Parsed</span>
+        </div>
+        <div class="profile-name" id="profile-name-el">Candidate</div>
+        <div class="profile-role" id="profile-role-el" style="display:inline-block;background:#FFD12E;color:#141414;padding:4px 12px;border-radius:12px;border:3px solid #141414;box-shadow:4px 4px 0 #141414;font-size:14px;font-weight:800">Not found</div>
+        <div class="profile-meta" id="profile-meta-el" style="margin-top:14px"></div>
+        <div id="profile-skills-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px"></div>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('ats')">ATS Score</button>
+      <button class="tab-btn" onclick="switchTab('corrections')">What to fix, and where</button>
+      <button class="tab-btn" onclick="switchTab('jobs')">Jobs that fit you right now</button>
+      <button class="tab-btn" onclick="switchTab('skills')">Skills we found</button>
+    </div>
+    <!-- ATS -->
+    <div class="tab-panel active" id="tab-ats">
+      <div class="ats-hero">
+        <div class="score-gauge">
+          <svg width="180" height="180" viewBox="0 0 180 180">
+            <circle class="gauge-track" cx="90" cy="90" r="76"/>
+            <circle class="gauge-fill" id="gauge-fill-circle" cx="90" cy="90" r="76" stroke-dasharray="477.5" stroke-dashoffset="477.5"/>
+          </svg>
+          <div class="gauge-center">
+            <span class="gauge-score" id="gauge-score-text">--</span>
+            <span class="gauge-label">ATS Score</span>
+            <span class="gauge-grade" id="gauge-grade-text"></span>
+          </div>
+        </div>
+        <div class="ats-meta">
+          <div class="ats-meta-title">ATS Score</div>
+          <div style="font-size:16px;color:#4A4A4A;font-weight:600;margin-bottom:4px">How easily robots can read your resume</div>
+          <div class="ats-meta-sub" id="ats-summary-text">Loading...</div>
+          <div class="ats-quick-stats" id="ats-quick-stats"></div>
+        </div>
+      </div>
+      <h3 style="font-size:20px;font-weight:800;margin-bottom:14px;color:#141414">Section-by-Section Audit</h3>
+      <div class="section-checks" id="section-checks-el"></div>
+      <h3 style="font-size:20px;font-weight:800;margin-bottom:14px;color:#141414">Priority Recommendations</h3>
+      <div class="rec-list" id="rec-list-el"></div>
+    </div>
+    <!-- Corrections -->
+    <div class="tab-panel" id="tab-corrections">
+      <div style="margin-bottom:20px">
+        <h2 style="font-size:24px;font-weight:800;margin-bottom:6px;color:#141414">What to fix, and where</h2>
+        <p style="font-size:16px;color:#4A4A4A;font-weight:500">Specific, kind suggestions built directly from your uploaded resume.</p>
+      </div>
+      <div id="corrections-container"></div>
+    </div>
+    <!-- Jobs -->
+    <div class="tab-panel" id="tab-jobs">
+      <div style="margin-bottom:16px">
+        <h2 style="font-size:24px;font-weight:800;margin-bottom:4px;color:#141414">Jobs that fit you right now</h2>
+      </div>
+      <div class="jobs-toolbar">
+        <input class="search-box" type="text" id="job-search" placeholder="Search jobs, companies..." oninput="filterJobs()"/>
+        <select class="filter-select" id="cat-filter" onchange="filterJobs()">
+          <option value="">All Categories</option>
+          <option value="Apply First">Apply First</option>
+          <option value="Good Match">Good Match</option>
+          <option value="Stretch">Stretch</option>
+        </select>
+        <select class="filter-select" id="track-filter" onchange="filterJobs()">
+          <option value="">All Tracks</option>
+          <option value="Python/SDE">Python / SDE</option>
+          <option value="CyberSecurity">CyberSecurity</option>
+          <option value="AI/Vision">AI / Vision</option>
+          <option value="Data">Data</option>
+        </select>
+        <span class="jobs-count" id="jobs-count-label">26 jobs</span>
+      </div>
+      <div class="jobs-grid" id="jobs-grid-el"></div>
+    </div>
+    <!-- Skills -->
+    <div class="tab-panel" id="tab-skills">
+      <div style="margin-bottom:20px">
+        <h2 style="font-size:24px;font-weight:800;margin-bottom:6px;color:#141414">Skills we found</h2>
+        <p style="font-size:16px;color:#4A4A4A;font-weight:500">Skills we found in your resume vs what top companies ask for.</p>
+      </div>
+      <div class="skill-gap-grid">
+        <div class="skill-col"><div class="skill-col-title"><span>✅</span> Skills We Found in Your Resume</div><div id="skills-have-list"></div></div>
+        <div class="skill-col"><div class="skill-col-title"><span>⚡</span> Suggested Skills to Explore</div><div id="skills-need-list"></div></div>
+      </div>
+      <div class="skill-col"><div class="skill-col-title"><span>🏆</span> Entry-Level Certifications to Consider</div><div id="certs-list"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal-overlay" id="job-modal" onclick="closeModalOnBg(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-logo" id="modal-logo">🏢</div>
+      <div class="modal-title"><h2 id="modal-title-text"></h2><p id="modal-company-text"></p></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+
+/* ── COLORFUL LETTER IN-OUT + BLAST ANIMATION ── */
+const BLAST_PALETTE = [
+  {bg:'#FF4F2E',fg:'#FFFFFF'},
+  {bg:'#FFD12E',fg:'#141414'},
+  {bg:'#00E5A3',fg:'#141414'},
+  {bg:'#38BDF8',fg:'#141414'},
+  {bg:'#FF3E8A',fg:'#FFFFFF'},
+  {bg:'#A3E635',fg:'#141414'},
+  {bg:'#8B5CF6',fg:'#FFFFFF'},
+  {bg:'#FF7A00',fg:'#FFFFFF'}
+];
+
+function triggerHeroBlast(){
+  const titleEl=document.getElementById('animated-welcome-title');
+  const container=document.getElementById('hero-blast-container');
+  const ring=document.getElementById('hero-blast-ring');
+  if(!titleEl||!container)return;
+
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const words=['WELCOME,','FRESHER'];
+  let idx=0;
+  titleEl.innerHTML=words.map(w=>{
+    const chars=w.split('').map(c=>{
+      const p=BLAST_PALETTE[idx%BLAST_PALETTE.length];
+      const delay=(idx*0.045).toFixed(3);
+      idx++;
+      const animStyle = prefersReduced ? 'opacity:1;animation:none;transform:none' : `animation-delay:${delay}s`;
+      return `<span class="blast-letter" style="background:${p.bg};color:${p.fg};${animStyle}">${c}</span>`;
+    }).join('');
+    return `<span class="word-group">${chars}</span>`;
+  }).join('');
+
+  if (prefersReduced) return;
+
+  setTimeout(()=>{
+    if(ring){ring.classList.remove('active');void ring.offsetWidth;ring.classList.add('active');}
+    container.querySelectorAll('.blast-particle').forEach(n=>n.remove());
+    for(let i=0;i<40;i++){
+      const sp=document.createElement('span');
+      sp.className='blast-particle';
+      const ang=(i/40)*Math.PI*2+(i%3)*0.15;
+      const dist=110+((i*37)%230);
+      const dx=Math.round(Math.cos(ang)*dist)+'px';
+      const dy=Math.round(Math.sin(ang)*dist*0.75)+'px';
+      const rot=((i*67)%520-260)+'deg';
+      const sz=10+(i%12);
+      const col=BLAST_PALETTE[i%BLAST_PALETTE.length].bg;
+      sp.style.cssText=`width:${sz}px;height:${sz}px;background:${col};border-radius:${i%2===0?'50%':'3px'};--dx:${dx};--dy:${dy};--rot:${rot};`;
+      container.appendChild(sp);
+      setTimeout(()=>sp.remove(),1200);
+    }
+  },920);
+}
+triggerHeroBlast();
+
+/* ── TYPEWRITER ── */
+(function(){
+  const el=document.getElementById('typewriter-el');
+  const msgs=["→ Drop your resume to unlock your perfect tech role","→ Get real ATS score + line-by-line corrections","→ Discover 26 verified jobs matching your skills","→ Built for freshers entering India's tech industry"];
+  let mi=0,ci=0,del=false;
+  function tick(){
+    const cur=msgs[mi];
+    if(!del){ci++;el.innerHTML=cur.slice(0,ci)+'<span class="cursor"></span>';
+      if(ci>=cur.length){setTimeout(()=>{del=true;tick();},2000);return;}}
+    else{ci--;el.innerHTML=cur.slice(0,ci)+'<span class="cursor"></span>';
+      if(ci<=0){del=false;mi=(mi+1)%msgs.length;}}
+    setTimeout(tick,del?30:55);}
+  setTimeout(tick,1400);
+})();
+
+/* ── DRAG & DROP ── */
+const dz=document.getElementById('drop-zone');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('dragover');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('dragover'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('dragover');const f=e.dataTransfer.files[0];if(f)uploadFile(f);});
+function handleFileSelect(ev){const f=ev.target.files[0];if(f)uploadFile(f);}
+function togglePasteArea(){const pw=document.getElementById('paste-area-wrapper');pw.classList.toggle('show');}
+function analyzePastedResume(){
+  const text=document.getElementById('paste-resume').value.trim();
+  if(text.length<80){alert('Please paste more resume content.');return;}
+  startLoadingAnimation(()=>callPasteAPI(text));
+}
+function showErr(msg){const e=document.getElementById('upload-error');e.textContent='⚠️ '+msg;e.style.display='block';}
+function hideErr(){document.getElementById('upload-error').style.display='none';}
+
+/* ── UPLOAD TO SERVER ── */
+function uploadFile(file){
+  hideErr();
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(ext === 'doc'){
+    showErr('Legacy .doc format is not supported. Please save as .docx or PDF.');
+    return;
+  }
+  if(!['pdf','docx','txt','md'].includes(ext)){
+    showErr('Unsupported file format. Please upload a PDF, DOCX, or TXT file.');
+    return;
+  }
+  if(file.size > 5 * 1024 * 1024){
+    showErr('File size exceeds 5 MB. Please upload a smaller resume document.');
+    return;
+  }
+  if(file.size === 0){
+    showErr('The uploaded file is empty. Please upload a valid resume.');
+    return;
+  }
+  startLoadingAnimation(()=>callUploadAPI(file));
+}
+async function callUploadAPI(file){
+  try{
+    const fd=new FormData();fd.append('file',file);
+    const res=await fetch('/api/resume/upload-and-match',{method:'POST',body:fd});
+    if(!res.ok){
+      const errData = await res.json().catch(()=>({}));
+      const msg = errData.detail || "We couldn't read this file. Try pasting the text instead.";
+      showErr(msg);
+      showScreen('screen-welcome');
+      return;
+    }
+    const data=await res.json();
+    renderResults(data,file.name);
+    showScreen('screen-results');
+  }catch(e){
+    showErr('Unable to reach the server. Please check your connection and try again.');
+    showScreen('screen-welcome');
+  }
+}
+async function callPasteAPI(text){
+  try{
+    const res=await fetch('/api/resume/paste-and-match',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({resume_text:text})});
+    if(!res.ok){
+      const errData = await res.json().catch(()=>({}));
+      const msg = errData.detail || "We couldn't process this resume text. Please check the content.";
+      showErr(msg);
+      showScreen('screen-welcome');
+      return;
+    }
+    const data=await res.json();
+    renderResults(data,'Pasted Text');
+    showScreen('screen-results');
+  }catch(e){
+    showErr('Unable to reach the server. Please check your connection and try again.');
+    showScreen('screen-welcome');
+  }
+}
+
+/* ── LOADING ANIMATION ── */
+const STEPS=["📖 Reading resume content...","🔍 Extracting skills and keywords...","📊 Calculating ATS score...","💼 Matching you to 26 jobs...","✨ Generating personalized insights..."];
+let apiCallback=null;
+function startLoadingAnimation(cb){
+  apiCallback=cb;
+  showScreen('screen-analyzing');
+  let step=0;
+  const fill=document.getElementById('progress-fill');
+  const stepEl=document.getElementById('analyzing-step-text');
+  let apiDone=false,animDone=false,apiResult=null;
+  cb();// start API call in parallel
+  function advance(){
+    if(step>=STEPS.length){animDone=true;return;}
+    stepEl.textContent=STEPS[step];
+    fill.style.width=((step+1)/STEPS.length*100)+'%';
+    for(let i=0;i<5;i++){const d=document.getElementById('dot-'+i);d.className='step-dot'+(i<step?' done':i===step?' active':'');}
+    step++;
+    setTimeout(advance,700+Math.random()*300);
+  }
+  advance();
+}
+
+/* ── CLIENT-SIDE ATS ENGINE (FALLBACK) ── */
+const KW_CATS={
+  'Python/Programming':['python','flask','django','fastapi','javascript','java','c++','sql','bash'],
+  'Machine Learning/AI':['machine learning','deep learning','tensorflow','pytorch','yolo','lstm','opencv','pandas','numpy','scikit'],
+  'Databases':['mysql','postgresql','mongodb','sqlite','redis','database'],
+  'Cloud/DevOps':['aws','azure','gcp','docker','kubernetes','linux','git','github','ci/cd'],
+  'Cyber Security':['cyber security','network security','siem','soc','penetration','cryptography','firewall','vulnerability'],
+  'Web/APIs':['rest api','flask','html','css','microservices','graphql','jwt'],
+  'Data Analytics':['pandas','matplotlib','seaborn','tableau','powerbi','data cleaning','etl'],
+  'Soft Skills':['team lead','leadership','agile','scrum','communication','client','management']
+};
+const VERBS=['developed','built','designed','implemented','automated','optimized','reduced','improved','deployed','created','engineered','led','managed','achieved','delivered','analyzed','established','integrated','streamlined'];
+const NEGS=['objective:','date of birth','marital status','mother tongue','nationality','passport','religion','caste'];
+
+function escapeHtml(str){
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function buildClientCorrections(r){
+  const lines = (r.resumeText || r.previewText || '').split('\n').map(l => l.trim()).filter(Boolean);
+  const cd = r.contactDetails || {};
+  const hasEmail = !!(cd.hasEmail || (r.email && r.email !== 'Not found'));
+  const hasPhone = !!(cd.hasPhone || (r.phone && r.phone !== 'Not found'));
+  const hasLinkedIn = !!(cd.hasLinkedIn || cd.hasLinkedin || (r.linkedin && r.linkedin !== 'Not found'));
+  const hasGitHub = !!(cd.hasGitHub || cd.hasGithub || (r.github && r.github !== 'Not found'));
+
+  const name = (r.name && r.name !== 'Not found') ? r.name : '[Your Full Name]';
+  const email = hasEmail ? (r.email || cd.email) : '[your.email@domain.com]';
+  const phone = hasPhone ? (r.phone || cd.phone) : '[+91 XXXXX XXXXX]';
+  const linkedin = hasLinkedIn ? (r.linkedin || cd.linkedin || 'linkedin.com/in/[your-username]') : 'linkedin.com/in/[your-username]';
+  const github = hasGitHub ? (r.github || cd.github || 'github.com/[your-username]') : 'github.com/[your-username]';
+
+  const headerLines = (r.headerLines && r.headerLines.length) ? r.headerLines : lines.slice(0, 2);
+  const summaryLine = r.summaryLine || '';
+  const projectLines = (r.projectLines && r.projectLines.length) ? r.projectLines : [];
+  const allSkills = r.allKeywords || (r.keywordsFound ? Object.values(r.keywordsFound).flat() : []);
+  const topSkills = allSkills.slice(0, 4);
+  const education = (r.education && r.education !== 'Not found') ? r.education : '';
+
+  const fixes = [];
+
+  if (!(hasEmail && hasPhone && hasLinkedIn && hasGitHub)) {
+    const missing = [];
+    if (!hasEmail) missing.push('email');
+    if (!hasPhone) missing.push('phone number');
+    if (!hasLinkedIn) missing.push('LinkedIn URL');
+    if (!hasGitHub) missing.push('GitHub URL');
+    fixes.push({
+      section: 'Contact Header',
+      icon: '📌',
+      status: 'critical',
+      before: headerLines.length ? headerLines.join('\n') : (lines[0] || '[Resume Header]'),
+      after: `${name}\n${email}  |  ${phone}\n${linkedin}  |  ${github}`,
+      tip: `We detected your header but could not find your ${missing.join(', ')}. Keep your real contact details and replace the [brackets] with your real profile links.`
+    });
+  }
+
+  let firstProjTitle = '';
+  if (projectLines.length > 0) {
+    const cleaned = projectLines[0].replace(/^[•\-\*\d\.\s]+/, '').trim();
+    firstProjTitle = cleaned.split(/[:|—–\-]/)[0].trim();
+    if (firstProjTitle.length > 45) firstProjTitle = firstProjTitle.split(/\s+/).slice(0, 5).join(' ');
+  }
+
+  const degPart = education || '[Your Degree & Specialization]';
+  const skillsPart = topSkills.length >= 2 ? topSkills.join(', ') : '[your top 3–4 technical skills]';
+  const projPart = firstProjTitle || '[your key project name]';
+  const suggestedSummary = (education && topSkills.length >= 2)
+    ? `${education} graduate with hands-on experience in ${topSkills.join(', ')}${firstProjTitle ? ', demonstrated through building ' + firstProjTitle : ''}. Seeking an entry-level [target role] position to deliver reliable software solutions.`
+    : `${degPart} graduate with hands-on experience in ${skillsPart}, demonstrated by building ${projPart}. Seeking an entry-level [target role] role.`;
+
+  fixes.push({
+    section: 'Professional Summary',
+    icon: '🎯',
+    status: 'suggested',
+    before: summaryLine || `[No summary section found — top of resume starts with: "${lines[0] || ''}"]`,
+    after: suggestedSummary,
+    tip: 'Summarize your actual degree, core skills, and flagship project in 2 lines tailored to your [target role].'
+  });
+
+  const targetProjLine = projectLines[0] || '';
+  const techUsed = topSkills.length ? topSkills.slice(0, 3).join(', ') : '[tech stack from your resume]';
+  if (targetProjLine) {
+    fixes.push({
+      section: 'Projects — Add Numbers & Scale',
+      icon: '🏗️',
+      status: 'suggested',
+      before: targetProjLine,
+      after: `Built ${firstProjTitle || '[project / feature name]'} using ${techUsed}, achieving [X% accuracy / latency improvement] across [number of users or records].`,
+      tip: 'Pair what you built and the real tools you used with measurable outcomes in [brackets].'
+    });
+  } else {
+    fixes.push({
+      section: 'Projects — Add Numbers & Scale',
+      icon: '🏗️',
+      status: 'critical',
+      before: '[No project bullet points detected in resume]',
+      after: `Built [what you built] using ${techUsed}, achieving [X% result] for [number of users or records].`,
+      tip: 'Add 2–3 academic or personal projects showing what you built, what tools you used, and the measurable result.'
+    });
+  }
+
+  return fixes;
+}
+
+function clientAnalyze(text){
+  const tl=text.toLowerCase();
+  const emailM=text.match(/[\w.+-]+@[\w-]+\.[\w.]+/);
+  const phoneM=text.match(/(?:\+?\d{1,3}[-.\s]?)?(?:\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}|\d{5}[-.\s]?\d{5})/);
+  const linkedinM=text.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/(?:in\/|pub\/)?[\w\-]+\/?/i);
+  const githubM=text.match(/(?:https?:\/\/)?(?:www\.)?(?:github\.com\/[\w\-]+|[\w\-]+\.github\.io(?:\/[\w\-]+)?)\/?/i);
+
+  const email=emailM?emailM[0]:'Not found';
+  const phone=phoneM?phoneM[0].trim():'Not found';
+  const linkedin=linkedinM?linkedinM[0].replace(/^https?:\/\/(?:www\.)?/i,'').replace(/\/$/,''):(/\blinkedin\b/i.test(text)?'LinkedIn (Detected in Resume)':'Not found');
+  const github=githubM?githubM[0].replace(/^https?:\/\/(?:www\.)?/i,'').replace(/\/$/,''):(/\bgithub\b/i.test(text)?'GitHub (Detected in Resume)':'Not found');
+
+  const hasEmail=email!=='Not found';
+  const hasPhone=phone!=='Not found';
+  const hasLinkedIn=linkedin!=='Not found';
+  const hasGitHub=github!=='Not found';
+
+  const foundVerbs=VERBS.filter(v=>tl.includes(v));
+  const metrics=[...tl.matchAll(/(\d+%|\d+k\+|\d+\+?\s*(records|users|hours|trainees|seconds|ms))/g)];
+  const flaws=NEGS.filter(n=>tl.includes(n));
+  const kwFound={};let totalKW=0;const allKeywords=[];
+  for(const[cat,kws]of Object.entries(KW_CATS)){
+    const m=kws.filter(k=>tl.includes(k));
+    kwFound[cat]=m;totalKW+=m.length;
+    m.forEach(k=>{if(!allKeywords.includes(k))allKeywords.push(k);});
+  }
+  let cScore=0;if(hasEmail)cScore+=5;if(hasPhone)cScore+=5;if(hasLinkedIn)cScore+=5;if(hasGitHub)cScore+=5;
+  const vScore=Math.min(20,foundVerbs.length*2.5);
+  const mScore=Math.min(20,metrics.length*5);
+  const kScore=Math.min(30,totalKW*1.5);
+  const penalty=flaws.length*8;
+  const atsScore=Math.max(20,Math.min(100,Math.round(cScore+vScore+mScore+kScore)-penalty));
+  const wc=text.split(/\s+/).filter(Boolean).length;
+  const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);
+  let name='Not found';
+  for(const l of lines.slice(0,5)){
+    if(l.length>2&&l.length<60&&!/@/.test(l)&&!/^\d/.test(l)&&!/objective|summary|skills|education|experience|resume|curriculum/i.test(l)){
+      name=l.replace(/[^a-zA-Z\s.]/g,'').trim();break;
+    }
+  }
+  let education='Not found';
+  const degM=text.match(/b\.?\s*tech(?:\s+in)?\s+[a-zA-Z\s&()\-]+|b\.?\s*e\.?(?:\s+in)?\s+[a-zA-Z\s&()\-]+|b\.?\s*sc(?:\s+in)?\s+[a-zA-Z\s&()\-]+|bca|mca/i);
+  if(degM){education=degM[0].split(/[,|—–\-]|cgpa|gpa|20\d{2}/i)[0].trim();}
+
+  const recs=[];
+  if(metrics.length<3)recs.push("Add numbers to your projects: how many users, records, or [X%] faster?");
+  if(!hasLinkedIn)recs.push("Include your LinkedIn profile link (linkedin.com/in/[your-username]) in the contact header.");
+  if(!hasGitHub)recs.push("Include your GitHub profile link (github.com/[your-username]) to showcase your code.");
+  if(foundVerbs.length<4)recs.push("Start project bullets with strong action verbs: Engineered, Built, Automated, Deployed.");
+  if(flaws.length>0)recs.push("Remove personal info fields: "+flaws.join(', '));
+  if(wc<200)recs.push("Add more detail on what you built and the tools you used in your projects.");
+
+  const baseObj={
+    atsScore,wordCount:wc,hasEmail,hasPhone,hasLinkedIn,hasGitHub,
+    foundVerbs,metricsCount:metrics.length,flaws,kwFound,keywordsFound:kwFound,allKeywords,totalKW,recs,
+    name,email,phone,linkedin,github,education,resumeText:text,
+    headerLines:lines.slice(0,2),
+    summaryLine:lines.find(l=>/objective|summary/i.test(l))||'',
+    projectLines:lines.filter(l=>/^[•\-*]|\b(built|developed|engineered|designed|created|made|worked on)\b/i.test(l)).slice(0,4),
+    rankedJobs:null
+  };
+  baseObj.corrections = buildClientCorrections(baseObj);
+  return baseObj;
+}
+
+/* ── RENDER ── */
+const LOGO_COLORS=['#FFD12E','#00E5A3','#38BDF8','#FF3E8A','#FF4F2E','#A3E635'];
+const JOBS_BASE=[
+  {id:1,title:"Associate Software Engineer (ASE)",company:"Accenture India",location:"Hyderabad / Bengaluru",experience:"0-1 Years (Fresher)",category:"Apply First",fitScore:94,track:"Python/SDE",applyLink:"https://www.accenture.com/in-en/careers",summary:"Design, develop, and maintain enterprise software solutions across multi-cloud and automation ecosystems.",whyMatch:"Strong Python foundation, OOPs, SQL, and B.Tech CSE align with Accenture's ASE criteria.",missingReqs:"CI/CD workflows and basic Azure/AWS cloud services.",keySkills:["Python","SQL","OOPs","Data Structures","Linux"],salaryRange:"₹4.5–6.5 LPA",postedDate:"Active Hiring Drive",emoji:"🔷"},
+  {id:2,title:"Systems Engineer / Digital Trainee",company:"TCS",location:"Hyderabad / Pan-India",experience:"0-1 Years (NQT)",category:"Apply First",fitScore:93,track:"Python/SDE",applyLink:"https://nextstep.tcs.com/",summary:"Specialized high-package track in TCS Digital building Python backend microservices, ML pipelines, and cloud workflows.",whyMatch:"Python + ML projects place you in the upper tier for TCS Digital.",missingReqs:"Competitive programming speed for NQT.",keySkills:["Python","Machine Learning","Algorithms","SQL","Git"],salaryRange:"₹7.0–9.0 LPA (Digital)",postedDate:"Active (TCS NextStep)",emoji:"🏢"},
+  {id:3,title:"GenC Programmer Analyst Trainee",company:"Cognizant",location:"Hyderabad / Chennai",experience:"0-1 Years",category:"Apply First",fitScore:92,track:"Python/SDE",applyLink:"https://careers.cognizant.com/india-en/pathways-to-cognizant/genc-program/",summary:"Foundational software engineering building distributed microservices, REST APIs, and enterprise Python systems.",whyMatch:"Python backend & REST APIs align with GenC criteria.",missingReqs:"Modern frontend (React/Angular).",keySkills:["Python","Flask","REST APIs","MySQL","Git"],salaryRange:"₹4.0–5.5 LPA",postedDate:"Active Pathways Drive",emoji:"🔵"},
+  {id:4,title:"Systems Engineer",company:"Infosys",location:"Hyderabad / Bengaluru",experience:"0-1 Years",category:"Apply First",fitScore:91,track:"Python/SDE",applyLink:"https://career.infosys.com/",summary:"Develop scalable backend systems and automate data workflows during Mysore training.",whyMatch:"Python, DS, DBMS from engineering coursework and ML familiarity.",missingReqs:"Advanced graph algorithms and DP for assessments.",keySkills:["Python","Data Structures","MySQL","OOP","Problem Solving"],salaryRange:"₹3.6–9.5 LPA",postedDate:"Active Early Career",emoji:"🟣"},
+  {id:5,title:"Graduate Engineer Trainee (GET)",company:"LTIMindtree",location:"Hyderabad / Bengaluru",experience:"0-1 Years",category:"Apply First",fitScore:91,track:"Python/SDE",applyLink:"https://www.ltimindtree.com/careers/",summary:"Rotational training in software engineering, data pipelines, cloud platforms, and agile development.",whyMatch:"Python, Git, SQL, and Linux proficiency match GET requirements.",missingReqs:"Docker and enterprise deployment pipelines.",keySkills:["Python","SQL","Git","Linux","SDLC"],salaryRange:"₹4.5–6.0 LPA",postedDate:"Active 2025/2026 Drive",emoji:"🌿"},
+  {id:6,title:"Associate Security Consulting Engineer",company:"Cisco Systems",location:"Bengaluru",experience:"0-1 Years",category:"Apply First",fitScore:90,track:"CyberSecurity",applyLink:"https://www.cisco.com/site/in/en/about/careers/jobs.html",summary:"Analyze security incidents, configure network defense, write Python security automation scripts.",whyMatch:"Security fundamentals + Python automation align with University Talent track.",missingReqs:"CCNA, CompTIA Security+ and Wireshark triage.",keySkills:["Cyber Security","Python","Networking","Linux","Threat Analysis"],salaryRange:"₹8.0–14.0 LPA",postedDate:"Active University Talent",emoji:"🛡️"},
+  {id:7,title:"Project Engineer (Elite Talent)",company:"Wipro",location:"Hyderabad / Bengaluru",experience:"0-1 Years",category:"Apply First",fitScore:90,track:"Python/SDE",applyLink:"https://wipro.eightfold.ai/careers",summary:"Develop enterprise applications, automated test harnesses, and cybersecurity solutions.",whyMatch:"Python, multi-language foundation, and collaborative project experience.",missingReqs:"Unit testing frameworks (Pytest/Unittest).",keySkills:["Python","C","MySQL","Operating Systems","Leadership"],salaryRange:"₹4.0–6.5 LPA",postedDate:"Active Elite Drive",emoji:"⚡"},
+  {id:8,title:"Software Developer (Python / Web Backend)",company:"Zoho Corporation",location:"Chennai / Hyderabad",experience:"0-1 Years",category:"Apply First",fitScore:89,track:"Python/SDE",applyLink:"https://careers.zohocorp.com/",summary:"Build high-throughput SaaS web services and optimize database queries for Zoho's cloud apps.",whyMatch:"Backend web & SQL portfolio; Zoho emphasizes algorithmic problem-solving.",missingReqs:"Multi-threading and memory profiling in Python.",keySkills:["Python","Flask","SQL","OOPs","Algorithms"],salaryRange:"₹6.0–9.0 LPA",postedDate:"Active Hiring Portal",emoji:"🟠"},
+  {id:9,title:"Software Engineer Trainee",company:"Persistent Systems",location:"Hyderabad / Pune",experience:"0-1 Years",category:"Apply First",fitScore:89,track:"Python/SDE",applyLink:"https://www.persistent.com/careers/",summary:"Product engineering teams developing API architectures and enterprise Python apps.",whyMatch:"Python automation + web APIs + GitHub project portfolio.",missingReqs:"Microservices and cloud-native container tools.",keySkills:["Python","REST APIs","SQL","Git","Cloud Basics"],salaryRange:"₹4.7–7.0 LPA",postedDate:"Active Trainee Drive",emoji:"🔶"},
+  {id:10,title:"Software Engineer / Analyst Trainee",company:"Capgemini",location:"Hyderabad / Bengaluru",experience:"0-1 Years",category:"Apply First",fitScore:89,track:"Python/SDE",applyLink:"https://www.capgemini.com/in-en/careers/",summary:"Application development, database design, automated reporting, and cloud transformations.",whyMatch:"Python, C, SQL fundamentals and analytical project work.",missingReqs:"AWS Cloud Practitioner or Azure AZ-900.",keySkills:["Python","SQL","Database Design","Analytical Skills","Git"],salaryRange:"₹4.25–6.0 LPA",postedDate:"Active Excellence Drive",emoji:"🔵"},
+  {id:11,title:"Junior AI & Vision Engineer",company:"Bosch Global Software (BGSW)",location:"Bengaluru / Hyderabad",experience:"0-1 Years",category:"Good Match",fitScore:88,track:"AI/Vision",applyLink:"https://www.bosch.in/careers/",summary:"Develop computer vision pipelines and edge vehicle detection models for smart mobility.",whyMatch:"Computer vision and deep learning projects align with smart mobility teams.",missingReqs:"Edge accelerators (TensorRT, OpenVINO).",keySkills:["Computer Vision","YOLO","LSTM","Python","NumPy/Pandas"],salaryRange:"₹6.0–8.5 LPA",postedDate:"Active Mobility Squads",emoji:"🤖"},
+  {id:12,title:"Graduate Engineer Trainee (Digital)",company:"Hexaware Technologies",location:"Chennai / Bengaluru",experience:"0-1 Years",category:"Good Match",fitScore:88,track:"Python/SDE",applyLink:"https://jobs.hexaware.com/",summary:"Automation engineering, Python backend development, cloud data pipelines, test automation.",whyMatch:"Python scripting and automated data pipeline experience.",missingReqs:"Selenium or Playwright test automation.",keySkills:["Python","Automation","SQL","Git","Problem Solving"],salaryRange:"₹4.0–6.0 LPA",postedDate:"Active PGET Batch",emoji:"🔷"},
+  {id:13,title:"Associate Software Engineer",company:"Tech Mahindra",location:"Hyderabad / Pune",experience:"0-1 Years",category:"Good Match",fitScore:88,track:"Python/SDE",applyLink:"https://careers.techmahindra.com/",summary:"Telecom software services, network automation scripts in Python, database backend integration.",whyMatch:"Networking coursework and Python scripting fit.",missingReqs:"Advanced Linux Shell and 5G/SDN protocols.",keySkills:["Python","Linux","SQL","Cyber Security","Networking"],salaryRange:"₹3.8–5.5 LPA",postedDate:"Active Trainee Drive",emoji:"🟢"},
+  {id:14,title:"Associate System Engineer (Cloud & Security)",company:"IBM India",location:"Hyderabad / Bengaluru",experience:"0-1 Years",category:"Good Match",fitScore:88,track:"CyberSecurity",applyLink:"https://www.ibm.com/in-en/employment/",summary:"Manage cloud security controls, automate log inspection with Python, ensure compliance.",whyMatch:"Linux OS literacy and Python automation scripting.",missingReqs:"RHEL and IBM QRadar SIEM experience.",keySkills:["Cyber Security","Python","Linux","Cloud","Scripting"],salaryRange:"₹4.8–7.5 LPA",postedDate:"Active Early Career",emoji:"🔵"},
+  {id:15,title:"Junior Analyst / AI Trainee",company:"Fractal Analytics",location:"Bengaluru / Gurugram",experience:"0-1 Years",category:"Good Match",fitScore:87,track:"AI/Vision",applyLink:"https://fractal.ai/careers/",summary:"Design predictive ML models, exploratory data analysis, and data visualization pipelines.",whyMatch:"Data analysis with Python, Pandas, and Matplotlib.",missingReqs:"Statistical hypothesis testing and PowerBI/Tableau.",keySkills:["Python","Pandas","Matplotlib","Machine Learning","Data Viz"],salaryRange:"₹6.5–9.0 LPA",postedDate:"Active AI Program",emoji:"📊"},
+  {id:16,title:"Junior SOC Analyst (Tier 1)",company:"Kyndryl",location:"Bengaluru / Hyderabad",experience:"0-1 Years",category:"Good Match",fitScore:86,track:"CyberSecurity",applyLink:"https://www.kyndryl.com/us/en/about-us/careers",summary:"Monitor security alerts, triage intrusion events, parse audit logs, escalate tickets.",whyMatch:"Network protocols knowledge and Python log scripting.",missingReqs:"SIEM dashboards (Splunk, Microsoft Sentinel).",keySkills:["SOC","Cyber Security","Log Analysis","Python","Incident Response"],salaryRange:"₹4.5–6.5 LPA",postedDate:"Active Security Track",emoji:"🛡️"},
+  {id:17,title:"Junior Python Developer",company:"HackerEarth",location:"Bengaluru / Remote",experience:"0-1 Years",category:"Good Match",fitScore:86,track:"Python/SDE",applyLink:"https://www.hackerearth.com/companies/careers/",summary:"Design algorithmic challenges, validate code evaluation engines, develop Python tools.",whyMatch:"Algorithmic problem-solving and Python development.",missingReqs:"Deep algorithmic time/space constraints and benchmark generation.",keySkills:["Python","DSA","Problem Solving","Git","Testing"],salaryRange:"₹5.0–7.5 LPA",postedDate:"Active Engineering Team",emoji:"⚡"},
+  {id:18,title:"Data Analyst / Trainee Data Engineer",company:"Tiger Analytics",location:"Chennai / Bengaluru / Hyderabad",experience:"0-1 Years",category:"Good Match",fitScore:85,track:"Data",applyLink:"https://www.tigeranalytics.com/careers/",summary:"Build data cleaning workflows, query relational warehouses, generate analytics dashboards.",whyMatch:"Data cleaning and transformation using Pandas, NumPy, and SQL.",missingReqs:"PySpark and Snowflake/BigQuery.",keySkills:["Python","SQL","Pandas","Data Cleaning","Matplotlib"],salaryRange:"₹5.5–8.0 LPA",postedDate:"Active Analytics Drive",emoji:"📈"},
+  {id:19,title:"Cyber Security Analyst / Risk Trainee",company:"EY India",location:"Hyderabad / Bengaluru",experience:"0-1 Years",category:"Good Match",fitScore:85,track:"CyberSecurity",applyLink:"https://www.ey.com/en_in/careers",summary:"Evaluate IT vulnerabilities, conduct security architecture risk assessments.",whyMatch:"Security fundamentals and communication skills.",missingReqs:"ISO 27001, SOC 2, and NIST compliance frameworks.",keySkills:["Cyber Security","Risk Assessment","Vulnerability Mgmt","Communication"],salaryRange:"₹5.0–7.5 LPA",postedDate:"Active Tech Risk Program",emoji:"🏦"},
+  {id:20,title:"Associate Software Engineer",company:"Virtusa",location:"Hyderabad / Chennai",experience:"0-1 Years",category:"Good Match",fitScore:85,track:"Python/SDE",applyLink:"https://www.virtusa.com/careers",summary:"Build backend microservices and database layers for financial clients.",whyMatch:"Python + SQL backend stack and REST API development.",missingReqs:"Financial domain knowledge and secure coding standards.",keySkills:["Python","Flask","MySQL","REST APIs","Git"],salaryRange:"₹4.0–5.5 LPA",postedDate:"Active Campus/Off-Campus",emoji:"💻"},
+  {id:21,title:"Trainee Decision Scientist",company:"Mu Sigma",location:"Bengaluru",experience:"0-1 Years",category:"Good Match",fitScore:84,track:"Data",applyLink:"https://www.mu-sigma.com/careers",summary:"Solve complex business problems combining data engineering and strategic tech consulting.",whyMatch:"Python data manipulation and analytical problem-solving.",missingReqs:"Business case study frameworks and rapid mental estimation.",keySkills:["Data Analysis","Python","SQL","Problem Solving","Communication"],salaryRange:"₹5.0–7.0 LPA",postedDate:"Active Early Career",emoji:"📊"},
+  {id:22,title:"Graduate Software Engineer",company:"Dell Technologies",location:"Bengaluru",experience:"0-1 Years",category:"Stretch",fitScore:83,track:"Python/SDE",applyLink:"https://jobs.dell.com/",summary:"Develop software for server management platforms, storage, and hardware monitoring.",whyMatch:"Linux OS, Python automation, and systems programming foundation.",missingReqs:"C++ systems programming and Linux kernel internals.",keySkills:["Python","Linux","C","Data Structures","Networking"],salaryRange:"₹7.5–11.0 LPA",postedDate:"Active University Program",emoji:"💻"},
+  {id:23,title:"Software Engineer Intern (Backend)",company:"PhonePe",location:"Bengaluru",experience:"0-1 Years (Intern)",category:"Stretch",fitScore:82,track:"Python/SDE",applyLink:"https://www.phonepe.com/careers/",summary:"Scale high-throughput transaction processing pipelines handling millions of payments.",whyMatch:"Relational databases, Python fluency, and backend focus.",missingReqs:"Redis, Kafka, and LeetCode-hard competitive coding.",keySkills:["Python","Databases","Distributed Systems","Algorithms","REST APIs"],salaryRange:"₹60K–100K/month (PPO ₹18–24 LPA)",postedDate:"Active University Hiring",emoji:"📱"},
+  {id:24,title:"SDE Intern / Trainee (Backend)",company:"Razorpay",location:"Bengaluru",experience:"0-1 Years",category:"Stretch",fitScore:81,track:"Python/SDE",applyLink:"https://razorpay.com/jobs/",summary:"Develop developer APIs, payment gateways, and fraud prevention engines.",whyMatch:"REST API experience and Python backend skillset.",missingReqs:"High-concurrency async backend (Celery) and microservice deployment.",keySkills:["Python","Flask","REST APIs","Databases","System Design"],salaryRange:"₹50K–80K/month (PPO ₹16–22 LPA)",postedDate:"Active Early Career",emoji:"💳"},
+  {id:25,title:"Associate Software Engineer / Intern",company:"Swiggy",location:"Bengaluru",experience:"0-1 Years",category:"Stretch",fitScore:80,track:"AI/Vision",applyLink:"https://careers.swiggy.com/",summary:"Work on delivery routing algorithms, order tracking, and logistics automation.",whyMatch:"Machine learning and algorithmic routing experience.",missingReqs:"Kafka event streams, real-time distributed architectures, Go/Java.",keySkills:["Python","Machine Learning","Algorithms","REST APIs","System Architecture"],salaryRange:"₹60K–85K/month (PPO ₹15–20 LPA)",postedDate:"Active Campus Drive",emoji:"🍕"},
+  {id:26,title:"SDE Intern (Systems & Backend)",company:"Juspay",location:"Bengaluru",experience:"0-1 Years",category:"Stretch",fitScore:79,track:"Python/SDE",applyLink:"https://juspay.in/careers",summary:"Engineer mission-critical payment gateways with extreme reliability.",whyMatch:"Strong algorithmic interest and Python foundation.",missingReqs:"Functional programming (Haskell/PureScript) and low-level concurrency.",keySkills:["Algorithms","Data Structures","Python","Functional Programming","Linux"],salaryRange:"₹40K–60K/month (PPO ₹14–20 LPA)",postedDate:"Active Engineering Challenge",emoji:"⚡"}
+];
+
+let currentJobs=[...JOBS_BASE];
+window.lastAnalyzedResume = null;
+
+function renderResults(data,fileName){
+  const prof = data.profile || {};
+  const aud = data.audit || {};
+  const rawContact = aud.contactDetails || data.contactDetails || {};
+  const emailVal = (prof.email && prof.email !== 'Not detected' && prof.email !== 'Not found')
+    ? prof.email
+    : ((rawContact.email && rawContact.email !== 'Not found') ? rawContact.email : (data.email && data.email !== 'Not found' ? data.email : 'Not found'));
+  const phoneVal = (prof.phone && prof.phone !== 'Not detected' && prof.phone !== 'Not found')
+    ? prof.phone
+    : ((rawContact.phone && rawContact.phone !== 'Not found') ? rawContact.phone : (data.phone && data.phone !== 'Not found' ? data.phone : 'Not found'));
+  const linkedinVal = (prof.linkedin && prof.linkedin !== 'Not found')
+    ? prof.linkedin
+    : ((rawContact.linkedin && rawContact.linkedin !== 'Not found') ? rawContact.linkedin : (data.linkedin && data.linkedin !== 'Not found' ? data.linkedin : 'Not found'));
+  const githubVal = (prof.github && prof.github !== 'Not found')
+    ? prof.github
+    : ((rawContact.github && rawContact.github !== 'Not found') ? rawContact.github : (data.github && data.github !== 'Not found' ? data.github : 'Not found'));
+
+  const hasEmail = emailVal !== 'Not found' || !!rawContact.hasEmail || !!data.hasEmail;
+  const hasPhone = phoneVal !== 'Not found' || !!rawContact.hasPhone || !!data.hasPhone;
+  const hasLinkedIn = linkedinVal !== 'Not found' || !!(rawContact.hasLinkedIn || rawContact.hasLinkedin || data.hasLinkedIn);
+  const hasGitHub = githubVal !== 'Not found' || !!(rawContact.hasGitHub || rawContact.hasGithub || data.hasGitHub);
+
+  const r = {
+    ...data,
+    ...prof,
+    ...aud,
+    name: (prof.name && prof.name !== 'Not found') ? prof.name : (data.candidateName || data.name || 'Not found'),
+    email: emailVal,
+    phone: phoneVal,
+    linkedin: linkedinVal,
+    github: githubVal,
+    education: (prof.education && prof.education !== 'Not found') ? prof.education : (data.education || 'Not found'),
+    atsScore: (aud.atsScore !== undefined) ? aud.atsScore : (data.atsScore !== undefined ? data.atsScore : 72),
+    contactDetails: {
+      hasEmail,
+      hasPhone,
+      hasLinkedIn,
+      hasLinkedin: hasLinkedIn,
+      hasGitHub,
+      hasGithub: hasGitHub,
+      email: emailVal,
+      phone: phoneVal,
+      linkedin: linkedinVal,
+      github: githubVal
+    },
+    recommendations: aud.recommendations || data.recommendations || data.recs || [],
+    corrections: aud.corrections || data.corrections || null,
+    rankedJobs: data.rankedJobs || data.jobs || null
+  };
+  if (!r.corrections || !r.corrections.length) {
+    r.corrections = buildClientCorrections(r);
+  }
+  window.lastAnalyzedResume = r;
+
+  const displayName = (r.name && r.name !== 'Not found') ? r.name : 'Candidate';
+
+  document.getElementById('rh-candidate-name').textContent = displayName + ' — Analysis Complete';
+  document.getElementById('profile-avatar').textContent = (displayName.trim()[0] || '?').toUpperCase();
+  document.getElementById('profile-name-el').textContent = displayName;
+  document.getElementById('profile-role-el').textContent = (r.education && r.education !== 'Not found') ? r.education : 'Degree: Not found';
+  document.getElementById('profile-meta-el').innerHTML = [
+    hasEmail
+      ? `<span class="profile-meta-item">📧 ${escapeHtml(r.email)}</span>`
+      : `<span class="profile-meta-item" style="color:var(--muted);font-style:italic">📧 Not found</span>`,
+    hasPhone
+      ? `<span class="profile-meta-item">📱 ${escapeHtml(r.phone)}</span>`
+      : `<span class="profile-meta-item" style="color:var(--muted);font-style:italic">📱 Not found</span>`,
+    hasLinkedIn
+      ? `<span class="profile-meta-item" style="background:#00E5A3">🔗 ${escapeHtml(r.linkedin !== 'Not found' ? r.linkedin : 'LinkedIn detected')}</span>`
+      : `<span class="profile-meta-item" style="color:var(--muted);font-style:italic">🔗 LinkedIn: Not found</span>`,
+    hasGitHub
+      ? `<span class="profile-meta-item" style="background:#00E5A3">💻 ${escapeHtml(r.github !== 'Not found' ? r.github : 'GitHub detected')}</span>`
+      : `<span class="profile-meta-item" style="color:var(--muted);font-style:italic">💻 GitHub: Not found</span>`,
+    `<span class="profile-meta-item" style="background:#FFD12E">📄 ${r.wordCount||'--'} words</span>`
+  ].filter(Boolean).join('');
+
+  const allSkills = r.keywordsFound ? Object.values(r.keywordsFound).flat() : (r.allKeywords || []);
+  const chipEl = document.getElementById('profile-skills-chips');
+  if(chipEl){
+    chipEl.innerHTML = `<span style="font-size:13px;color:#141414;font-weight:800;margin-right:4px;align-self:center">Skills we found:</span>` +
+      (allSkills.length
+        ? allSkills.slice(0,14).map((sk,i)=>{
+            const p=BLAST_PALETTE[i%BLAST_PALETTE.length];
+            return `<span style="background:${p.bg};color:${p.fg};border:3px solid #141414;box-shadow:4px 4px 0 #141414;padding:4px 10px;border-radius:12px;font-size:12px;font-weight:800;text-transform:uppercase;font-family:'JetBrains Mono',monospace">${escapeHtml(sk)}</span>`;
+          }).join('')
+        : `<span style="font-size:13px;color:var(--muted);font-style:italic">Not found</span>`);
+  }
+
+  renderATSGauge(r);
+  renderSectionChecks(r);
+  renderRecs(r.recommendations);
+  renderCorrections(r);
+  renderJobsPanel(r);
+  renderSkillsPanel(r);
+}
+
+function loadSampleFresherResume(){
+  const sampleText = `Sample Fresher\nEmail: sample.fresher@example.com | Phone: +91 98765 43210 | github.com/sample-fresher | linkedin.com/in/sample-fresher\n\nSUMMARY\nFinal-year B.Tech Computer Science graduate with hands-on experience building Python backend services, REST APIs, and machine learning pipelines.\n\nEDUCATION\nB.Tech in Computer Science & Engineering, National Institute of Technology — 2026 | CGPA: 8.2\n\nTECHNICAL SKILLS\nPython, Flask, SQL, MySQL, REST API, OpenCV, YOLO, LSTM, Machine Learning, Linux, Git, GitHub, OOP, Data Structures\n\nPROJECTS\n• Smart Traffic Vision System: Engineered a real-time vehicle detection and tracking pipeline using Python and OpenCV.\n• TaskFlow API Server: Worked on developing the backend features with Flask, MySQL, and REST APIs handling 500+ task records under 180ms latency.\n\nEXPERIENCE\n• Software Engineering Intern — Acme Tech Labs (Jun 2025 – Aug 2025): Collaborated with a 6-member engineering team and automated data validation scripts in Python, reducing manual triage time by 25%.`;
+  document.getElementById('paste-resume').value = sampleText;
+  analyzePastedResume();
+}
+
+function renderATSGauge(r){
+  const score=r.atsScore;
+  const circ=document.getElementById('gauge-fill-circle');
+  let color,label;
+  if(score>=75){color='#00E5A3';label='Strong Score';}
+  else if(score>=50){color='#FFD12E';label='Good Start';}
+  else{color='#FF4F2E';label='Needs Fixes';}
+  document.getElementById('gauge-score-text').textContent=score;
+  document.getElementById('gauge-score-text').style.color='#141414';
+  const gEl=document.getElementById('gauge-grade-text');
+  gEl.textContent=label;
+  gEl.style.background=color;
+  gEl.style.color='#141414';
+  gEl.style.border='3px solid #141414';
+  circ.style.stroke=color;
+  setTimeout(()=>{circ.style.strokeDashoffset=477.5*(1-score/100);},400);
+  const ptsAway = Math.max(1, 75 - score);
+  const top3 = (r.recommendations && r.recommendations.length >= 3)
+    ? r.recommendations.slice(0,3)
+    : [
+        'Add numbers to your projects: how many users, records, or [X%] faster?',
+        'Add clickable GitHub and LinkedIn links right at the top of your resume.',
+        'Include core tools and frameworks you have used (e.g., SQL, Docker, Git).'
+      ];
+  const headerLine = score >= 75
+    ? `<strong>Strong score! Here are 3 ways to polish it:</strong>`
+    : `<strong>You're ${ptsAway} ${ptsAway === 1 ? 'point' : 'points'} from a strong score. Fix these 3 things:</strong>`;
+  const summary = `${headerLine}<ol style="margin-top:8px;padding-left:20px;line-height:1.6">${top3.map(t=>`<li>${escapeHtml(t)}</li>`).join('')}</ol>`;
+  document.getElementById('ats-summary-text').innerHTML=summary;
+
+  const wc=r.wordCount||'--';
+  const kw=r.totalKW||(r.keywordsFound?Object.values(r.keywordsFound).flat().length:0);
+  const av=r.actionVerbsFound?.length||r.foundVerbs?.length||0;
+  const mc=r.quantifiedMetricsCount||r.metricsCount||0;
+  document.getElementById('ats-quick-stats').innerHTML=`
+    <div class="qs-card"><span class="qs-val" style="background:#00E5A3;color:#141414;padding:2px 10px;border-radius:12px;border:2px solid #141414;display:inline-block">${wc}</span><span class="qs-key">Words</span></div>
+    <div class="qs-card"><span class="qs-val" style="background:#FFD12E;color:#141414;padding:2px 10px;border-radius:12px;border:2px solid #141414;display:inline-block">${kw}</span><span class="qs-key">Keywords</span></div>
+    <div class="qs-card"><span class="qs-val" style="background:#38BDF8;color:#141414;padding:2px 10px;border-radius:12px;border:2px solid #141414;display:inline-block">${av}</span><span class="qs-key">Action Verbs</span></div>
+    <div class="qs-card"><span class="qs-val" style="background:#FF3E8A;color:#FFFFFF;padding:2px 10px;border-radius:12px;border:2px solid #141414;display:inline-block">${mc}</span><span class="qs-key">Metrics</span></div>`;
+}
+
+function renderSectionChecks(r){
+  const cd=r.contactDetails||{};
+  const hasEmail = !!(cd.hasEmail);
+  const hasPhone = !!(cd.hasPhone);
+  const hasLinkedIn = !!(cd.hasLinkedIn || cd.hasLinkedin);
+  const hasGitHub = !!(cd.hasGitHub || cd.hasGithub);
+  const av=r.actionVerbsFound?.length||r.foundVerbs?.length||0;
+  const mc=r.quantifiedMetricsCount||r.metricsCount||0;
+  const kw=r.totalKW||(r.keywordsFound?Object.values(r.keywordsFound).flat().length:0);
+  const fl=r.detectedFlaws||r.flaws||[];
+  const wc=r.wordCount||0;
+  const catCount=r.keywordsFound?Object.values(r.keywordsFound).filter(a=>a.length>0).length:(r.kwFound?Object.values(r.kwFound).filter(a=>a.length>0).length:0);
+  const checks=[
+    {label:'Email Address',pass:hasEmail,detail:hasEmail?`Detected in resume (${escapeHtml(r.email)}).`:'Add your email ([your.email@domain.com]) to the contact header.',score:'Contact'},
+    {label:'Phone Number',pass:hasPhone,detail:hasPhone?`Detected in resume (${escapeHtml(r.phone)}).`:'Add your phone number ([+91 XXXXX XXXXX]) to the header.',score:'Contact'},
+    {label:'LinkedIn Profile',pass:hasLinkedIn,detail:hasLinkedIn?`LinkedIn URL detected (${escapeHtml(r.linkedin !== 'Not found' ? r.linkedin : 'linkedin.com')}).`:'Add linkedin.com/in/[your-username] so recruiters can connect.',score:'Contact'},
+    {label:'GitHub Profile',pass:hasGitHub,detail:hasGitHub?`GitHub URL detected (${escapeHtml(r.github !== 'Not found' ? r.github : 'github.com')}).`:'Add github.com/[your-username] so hiring teams can see your code.',score:'Contact'},
+    {label:'Action Verbs',pass:av>=4,detail:av>=4?`${av} strong action verbs found.`:`Swap passive phrases for active verbs like Engineered, Built, or Automated.`,score:'Content'},
+    {label:'Quantified Metrics',pass:mc>=3,detail:mc>=3?`${mc} measurable results found — great work!`:`Add numbers to your projects: how many users, records, or [X%] faster?`,score:'Impact'},
+    {label:'Technical Keywords',pass:kw>=8,detail:kw>=8?`${kw} technical keywords detected.`:`List the specific frameworks, databases, and tools you built with.`,score:'Keywords'},
+    {label:'Keyword Diversity',pass:catCount>=3,detail:`Keywords across ${catCount}/6 skill categories.`,score:'Keywords'},
+    {label:'Clean Formatting',pass:fl.length===0,detail:fl.length===0?'Clean structure with zero outdated fields.':'You can safely remove: '+fl.join(', ')+' to save space.',score:'Format'},
+    {label:'Resume Length',pass:wc>=200&&wc<=900,detail:wc<200?'Add a bit more detail on what you built in your projects.':(wc>900?'Trim to 400–700 words so it fits cleanly on one page.':wc+' words — great one-page length.'),score:'Format'}
+  ];
+  document.getElementById('section-checks-el').innerHTML=checks.map((c,i)=>`
+    <div class="check-row" style="animation:cardReveal 0.3s ease ${i*.06}s both">
+      <div class="check-icon ${c.pass?'pass':c.score==='Contact'?'fail':'warn'}">${c.pass?'✓':c.score==='Contact'?'✗':'⚠'}</div>
+      <div class="check-text"><div class="check-label">${c.label} <span style="font-size:12px;color:var(--muted);font-weight:700;font-family:'JetBrains Mono',monospace">[${c.score}]</span></div><div class="check-detail">${c.detail}</div></div>
+      <span class="check-badge" style="background:${c.pass?'#00E5A3':c.score==='Contact'?'#FF3E8A':'#FFD12E'};color:${c.score==='Contact'&&!c.pass?'#fff':'#141414'};border:3px solid #141414">${c.pass?'STRONG':c.score==='Contact'?'CRITICAL':'SUGGESTED'}</span>
+    </div>`).join('');
+}
+
+function renderRecs(recs){
+  if(!recs||!recs.length){document.getElementById('rec-list-el').innerHTML='<p style="color:#141414;font-weight:800;font-size:16px">🎉 Your resume looks great!</p>';return;}
+  document.getElementById('rec-list-el').innerHTML=recs.map((r,i)=>`
+    <div class="rec-item" style="animation:cardReveal 0.3s ease ${i*.08}s both">
+      <div class="rec-num">${i+1}</div><div class="rec-text">${escapeHtml(r)}</div>
+    </div>`).join('');
+}
+
+function renderCorrections(r){
+  const fixes = (r.corrections && r.corrections.length) ? r.corrections : buildClientCorrections(r);
+  document.getElementById('corrections-container').innerHTML=fixes.map((f,i)=>`
+    <div class="ba-section" style="animation:cardReveal 0.3s ease ${i*.07}s both">
+      <div class="ba-section-title"><span>${f.icon||'🛠️'}</span>${escapeHtml(f.section)}<span class="check-badge" style="margin-left:auto;background:${f.status==='critical'?'#FF3E8A':'#FFD12E'};color:${f.status==='critical'?'#fff':'#141414'};border:3px solid #141414">${f.status==='critical'?'CRITICAL':'SUGGESTED'}</span></div>
+      <div class="ba-grid">
+        <div class="ba-box ba-before">
+          <div class="ba-box-label">Change this</div>
+          <div class="ba-text">${escapeHtml(f.before).replace(/\n/g,'<br>')}</div>
+        </div>
+        <div class="ba-box ba-after">
+          <div class="ba-box-label">To this</div>
+          <div class="ba-text">${escapeHtml(f.after).replace(/\n/g,'<br>')}</div>
+          <p class="ba-placeholder-note">Replace the [brackets] with your real details. Don't add numbers you can't back up.</p>
+        </div>
+      </div>
+      <div style="margin-top:14px;background:#FFD12E;border:3px solid #141414;box-shadow:4px 4px 0 #141414;padding:10px 14px;border-radius:12px;font-size:15px;color:#141414;font-weight:600">💡 <strong>Why this helps:</strong> ${escapeHtml(f.tip)}</div>
+    </div>`).join('');
+}
+
+function renderJobsPanel(r){
+  if(r.rankedJobs && r.rankedJobs.length > 0){
+    currentJobs = r.rankedJobs;
+  } else {
+    const tl=(r.resumeText||r.resume_text||'').toLowerCase();
+    currentJobs=JOBS_BASE.map(j=>{
+      let bonus=0;j.keySkills.forEach(s=>{if(tl.includes(s.toLowerCase()))bonus+=2;});
+      return{...j,fitScore:Math.min(94,j.fitScore+Math.round(bonus/2))};
+    }).sort((a,b)=>b.fitScore-a.fitScore);
+  }
+  document.getElementById('jobs-count-label').textContent=currentJobs.length+' jobs matched';
+  renderJobGrid(currentJobs);
+}
+
+function filterJobs(){
+  const q=document.getElementById('job-search').value.toLowerCase();
+  const cat=document.getElementById('cat-filter').value;
+  const track=document.getElementById('track-filter').value;
+  const f=currentJobs.filter(j=>(!q||(j.title+j.company+j.summary+j.track).toLowerCase().includes(q))&&(!cat||j.category===cat)&&(!track||j.track===track));
+  document.getElementById('jobs-count-label').textContent=f.length+' jobs';
+  renderJobGrid(f);
+}
+
+function renderJobGrid(jobs){
+  const g=document.getElementById('jobs-grid-el');
+  if(!jobs.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted)">No jobs match your filters.</div>';return;}
+  g.innerHTML=jobs.map((j,i)=>{
+    const sc=j.fitScore;
+    const scC=sc>=90?'score-90':sc>=80?'score-80':sc>=70?'score-70':'score-low';
+    const catC=j.category==='Apply First'?'cat-apply-first':j.category==='Good Match'?'cat-good-match':'cat-stretch';
+    const bg=LOGO_COLORS[i%LOGO_COLORS.length];
+    return`<div class="job-card" style="animation-delay:${i*.04}s" onclick="openJobModal(${j.id})">
+      <div class="jc-header">
+        <div class="jc-logo" style="background:${bg}">${j.emoji||'🏢'}</div>
+        <div class="jc-title-block"><div class="jc-title">${escapeHtml(j.title)}</div><div class="jc-company">${escapeHtml(j.company)}</div></div>
+        <div class="jc-score-badge"><div class="jc-score-num ${scC}">${j.fitScore}</div><div class="jc-score-label">/100</div></div>
+      </div>
+      <div class="jc-tags">
+        <span class="jc-tag tag-location">📍 ${escapeHtml((j.location||'India').split('/')[0].trim())}</span>
+        <span class="jc-tag tag-track">${escapeHtml(j.track)}</span>
+        <span class="jc-tag tag-salary">💰 ${escapeHtml(j.salaryRange)}</span>
+      </div>
+      <div class="jc-summary">${escapeHtml(j.summary)}</div>
+      <div class="jc-match-bar"><div class="jc-match-fill" style="width:${j.fitScore}%"></div></div>
+      <div class="jc-footer">
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="category-chip ${catC}">${escapeHtml(j.category)}</span>
+          <span class="jc-posted">🕐 ${escapeHtml(j.postedDate)}</span>
+        </div>
+        <a class="jc-apply" href="${j.applyLink}" target="_blank" onclick="event.stopPropagation()">Apply ↗</a>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openJobModal(id){
+  const j=currentJobs.find(x=>x.id===id)||JOBS_BASE.find(x=>x.id===id);
+  if(!j)return;
+  document.getElementById('modal-logo').textContent=j.emoji||'🏢';
+  document.getElementById('modal-title-text').textContent=j.title;
+  document.getElementById('modal-company-text').textContent=j.company+' · '+j.location;
+  const sc=j.fitScore;const scColor=sc>=75?'#00E5A3':sc>=50?'#FFD12E':'#FF4F2E';
+  const catC=j.category==='Apply First'?'cat-apply-first':j.category==='Good Match'?'cat-good-match':'cat-stretch';
+  document.getElementById('modal-body').innerHTML=`
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+      <span class="category-chip ${catC}">${escapeHtml(j.category)}</span>
+      <span class="jc-tag tag-track">${escapeHtml(j.track)}</span>
+      <span class="jc-tag tag-salary">💰 ${escapeHtml(j.salaryRange)}</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;background:var(--card);border:3px solid #141414;box-shadow:4px 4px 0 #141414;border-radius:12px;padding:16px;margin-bottom:20px">
+      <div style="text-align:center"><div style="font-size:32px;font-weight:900;background:${scColor};color:#141414;padding:4px 12px;border-radius:12px;border:3px solid #141414;font-family:'JetBrains Mono',monospace">${j.fitScore}</div><div style="font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;margin-top:4px;font-family:'JetBrains Mono',monospace">Fit Score</div></div>
+      <div style="flex:1"><div style="height:10px;background:#FFF8E7;border:2px solid #141414;border-radius:12px;overflow:hidden"><div style="height:100%;width:${j.fitScore}%;background:${scColor}"></div></div><div style="font-size:13px;color:#141414;font-weight:700;margin-top:6px">${j.fitScore>=75?'Strong match':'Good match'} for your profile</div></div>
+    </div>
+    <div class="modal-section"><div class="modal-section-title">About This Role</div><p>${escapeHtml(j.summary)}</p></div>
+    <div class="modal-section"><div class="modal-section-title">Why You Match</div><p style="background:#00E5A3;color:#141414;padding:8px 12px;border-radius:12px;border:2px solid #141414;font-weight:700">${escapeHtml(j.whyMatch)}</p></div>
+    <div class="modal-section"><div class="modal-section-title">Key Skills Required</div><div class="skill-chips">${(j.keySkills||[]).map(s=>`<span class="skill-chip">${escapeHtml(s)}</span>`).join('')}</div></div>
+    <div class="modal-section"><div class="modal-section-title">Skills to Develop</div><div class="skill-chips">${(j.missingReqs||'').split(/[,;]/).filter(Boolean).map(s=>`<span class="missing-chip">⚡ ${escapeHtml(s.trim())}</span>`).join('')}</div></div>
+    <div class="modal-section"><div class="modal-section-title">Status</div><p>🕐 ${escapeHtml(j.postedDate)}</p></div>
+    <a class="modal-apply-btn" href="${j.applyLink}" target="_blank">🚀 Apply Now — ${escapeHtml(j.company)} ↗</a>`;
+  document.getElementById('job-modal').classList.add('open');
+}
+function closeModal(){document.getElementById('job-modal').classList.remove('open');}
+function closeModalOnBg(e){if(e.target.id==='job-modal')closeModal();}
+
+function renderSkillsPanel(r){
+  const foundList = r && r.keywordsFound ? Object.values(r.keywordsFound).flat() : (r && r.allKeywords ? r.allKeywords : []);
+  const needSkills=[{name:'Docker / Containers',priority:'High'},{name:'AWS / Cloud Fundamentals',priority:'High'},{name:'REST API Design',priority:'Medium'},{name:'Automated Unit Testing',priority:'Medium'}];
+  const certs=[{name:'AWS Cloud Practitioner',impact:'Cloud fundamentals for entry-level roles',time:'Self-paced',emoji:'☁️'},{name:'ISC2 Certified in Cybersecurity (CC)',impact:'Entry-level security & networking foundation',time:'Self-paced',emoji:'🛡️'}];
+  const pc={'High':'#FF3E8A','Medium':'#FFD12E','Low':'#00E5A3'};
+  document.getElementById('skills-have-list').innerHTML = foundList.length
+    ? foundList.map(s=>`<div class="skill-item"><span style="text-transform:uppercase;font-family:'JetBrains Mono',monospace">${escapeHtml(s)}</span><span style="font-size:11px;font-weight:800;background:#00E5A3;color:#141414;padding:3px 10px;border-radius:12px;border:2px solid #141414;font-family:'JetBrains Mono',monospace">DETECTED</span></div>`).join('')
+    : `<div class="skill-item"><span style="color:var(--muted);font-style:italic">Not found</span></div>`;
+  document.getElementById('skills-need-list').innerHTML=needSkills.map(s=>`<div class="skill-item"><span>${escapeHtml(s.name)}</span><span style="font-size:11px;font-weight:800;background:${pc[s.priority]};color:${s.priority==='High'?'#fff':'#141414'};padding:3px 10px;border-radius:12px;border:2px solid #141414;font-family:'JetBrains Mono',monospace">${s.priority}</span></div>`).join('');
+  document.getElementById('certs-list').innerHTML=certs.map(c=>`<div class="skill-item" style="flex-direction:column;align-items:flex-start;gap:4px;padding:12px 0"><div style="display:flex;align-items:center;gap:10px;width:100%"><span style="font-size:20px">${c.emoji}</span><div><div style="font-size:15px;font-weight:800">${escapeHtml(c.name)}</div><div style="font-size:13px;color:var(--muted)">${escapeHtml(c.impact)} · ⏱ ${escapeHtml(c.time)}</div></div></div></div>`).join('');
+}
+
+/* ── NAV ── */
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function goToWelcome(){showScreen('screen-welcome');}
+function switchTab(name){
+  const tabs=['ats','corrections','jobs','skills'];
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',tabs[i]===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+/* ── DOWNLOAD ── */
+function downloadATSResume(){
+  const r = window.lastAnalyzedResume || {};
+  const fixes = (r.corrections && r.corrections.length) ? r.corrections : buildClientCorrections(r);
+  const name = (r.name && r.name !== 'Not found') ? r.name : '[Your Full Name]';
+  const email = (r.email && r.email !== 'Not found') ? r.email : '[your.email@domain.com]';
+  const phone = (r.phone && r.phone !== 'Not found') ? r.phone : '[+91 XXXXX XXXXX]';
+  const linkedin = (r.linkedin && r.linkedin !== 'Not found') ? r.linkedin : 'linkedin.com/in/[your-username]';
+  const github = (r.github && r.github !== 'Not found') ? r.github : 'github.com/[your-username]';
+  const education = (r.education && r.education !== 'Not found') ? r.education : '[Your Degree & University]';
+  const skills = r.keywordsFound ? Object.values(r.keywordsFound).flat() : (r.allKeywords || []);
+  const summaryFix = fixes.find(f => f.section.includes('Summary'));
+  const projFix = fixes.find(f => f.section.includes('Projects'));
+
+  const txt = `${name.toUpperCase()}
+${email} | ${phone}
+${linkedin} | ${github}
+
+PROFESSIONAL SUMMARY
+${summaryFix ? summaryFix.after : '[Add a 2-sentence summary highlighting your degree, skills, and key project]'}
+
+TECHNICAL SKILLS
+${skills.length ? skills.join(', ') : '[Add your core programming languages, frameworks, and tools]'}
+
+PROJECTS
+• ${projFix ? projFix.after : 'Built [project name] using [tech stack], achieving [X% improvement] across [number of users or records].'}
+
+EDUCATION
+${education}
+
+NOTE: Replace all [brackets] with your real, verifiable details before submitting.
+`;
+  const b=new Blob([txt],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);
+  a.download=(name.replace(/[^a-zA-Z0-9]/g,'_') || 'Improved')+'_ATS_Resume.txt';
+  a.click();
+}
+</script>
+</body>
+</html>

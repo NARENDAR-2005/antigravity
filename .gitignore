@@ -1,0 +1,24 @@
+# dependencies
+node_modules/
+__pycache__/
+*.pyc
+
+# Next.js build
+.next/
+out/
+build/
+dist/
+
+# Environment files
+.env*
+!.env.example
+
+# OS and logs
+.DS_Store
+*.log
+.vercel
+*.tsbuildinfo
+
+# Uploaded files and scratch
+data/uploads/
+scratch/
