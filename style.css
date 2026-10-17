@@ -1,0 +1,66 @@
+/* Custom Application Styles */
+:root {
+  --bg-main: #0b0f19;
+  --bg-card: #111827;
+  --bg-card-hover: #1f2937;
+  --border-color: #374151;
+  --accent-blue: #3b82f6;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+}
+
+body {
+  background-color: #0b0f19;
+  color: #f3f4f6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(17, 24, 39, 0.7);
+}
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* Badges */
+.badge-apply-first {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+.badge-good-match {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+.badge-stretch {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+/* Tab active style */
+.tab-active {
+  border-bottom: 3px solid #3b82f6;
+  color: #60a5fa !important;
+  font-weight: 600;
+}
+
+/* Card hover animation */
+.job-card {
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.job-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+}

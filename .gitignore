@@ -1,24 +1,28 @@
 # dependencies
 node_modules/
-__pycache__/
-*.pyc
+/.pnp
+.pnp.js
 
-# Next.js build
+# testing
+/coverage
+
+# next.js build output
 .next/
 out/
 build/
 dist/
 
-# Environment files
+# misc
+.DS_Store
+*.pem
+*.log
+
+# local env files
 .env*
 !.env.example
 
-# OS and logs
-.DS_Store
-*.log
+# vercel
 .vercel
-*.tsbuildinfo
 
-# Uploaded files and scratch
-data/uploads/
-scratch/
+# typescript
+*.tsbuildinfo

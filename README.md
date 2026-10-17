@@ -1,75 +1,103 @@
-# AI Job-Search Agent & Career Portal
+# FresherLaunch 🚀
 
-A full-stack, autonomous AI job-search web application built for **Fresh Graduates** (featuring a neutral **Sample Fresher** demo profile).
+An editorial, human-designed resume checker and honest job-matcher engineered specifically for fresh college graduates entering the tech market.
 
-The application features:
-* **26 Curated & Verified Active Job Openings** across India (Accenture, TCS, Cognizant, Infosys, Cisco, Zoho, Bosch, PhonePe, Razorpay, etc.) with verified official career portal application links.
-* **Fit Score Engine (0-100)**: Evaluates candidate technical capabilities (Python, ML/CV, Cyber Security, SQL, Flask) against real job specifications.
-* **Application Kanban Tracker**: Persistent pipeline tracking for *Saved*, *Applied*, *Interviewing*, and *Offer* stages with custom notes.
-* **AI Resume Auditor & Live JD Matcher**: Evaluates resumes on ATS criteria, highlights quantified XYZ metrics, detects missing keywords, and benchmarks against any pasted job description.
-* **Recruiter Outreach Studio**: Generates customized LinkedIn connection notes (<300 characters strictly) and detailed InMail / direct email pitches with 1-click clipboard copying.
+Built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, and **Framer Motion**.
 
 ---
 
-## 🚀 Quick Launch
+## 🎨 Design System: "Warm Paper & Sharp Ink"
+FresherLaunch deliberately rejects the generic "AI dashboard" look (no purple gradients, no glassmorphism, no emoji icons, no Inter/Roboto):
+- **Paper Background**: `#F4EFE6`
+- **Dense Carbon Ink**: `#141414`
+- **Editorial Tomato Accent**: `#FF4F2E`
+- **Typography**:
+  - Headlines: **Fraunces** (tight, large display serif)
+  - Body & UI: **DM Sans** (clean, readable geometric sans)
+  - Scores & Diffs: **Space Mono** (precise typewriter numbers)
+- **Visual Stylings**:
+  - 2px solid ink borders
+  - Hard offset drop shadows (`4px 4px 0px #141414`)
+  - Rotated editorial stickers (`-2deg`, `3deg`)
+  - Hand-drawn SVG underlines, asterisks, and stamps
 
-### Option 1: One-Click Windows Launcher
-Double-click `run_app.bat` in this folder. It will start the server and open `http://127.0.0.1:8000` directly in your browser.
+---
 
-### Option 2: Python Command Line
+## 🧭 Flow & Features
+
+### 1. Welcome & Letter-by-Letter Hero
+- Full-screen `"WELCOME, FRESHER"` title with staggered spring physics animations letter by letter.
+- Real-time typewriter sequence: *"Drop your resume. Let's make it impossible to ignore."*
+- Drop box fades in with drag-over tilt physics (`rotate-2`), changing state to `"Yes, right here."`
+- Real-time multi-step progress animator: `Reading → Checking ATS → Scoring → Finding jobs`.
+
+### 2. Deterministic ATS Scoring Engine (Fixed Mathematical Rules)
+No hallucinated AI score guesswork. The score (0–100) is calculated strictly by code rules:
+1. **Formatting & Structure (25 pts)**: Scanned image detection, encoding cleanliness, clear linebreaks, standard bullets, and absence of outdated filler phrases.
+2. **Technical Keywords Density (25 pts)**: Matches against curated taxonomy of modern graduate tech skills (Python, SQL, React, Docker, Linux, Git, etc.).
+3. **Essential Sections (15 pts)**: Verifies presence of Education, Skills, Projects, Experience, and Summary.
+4. **Action Verbs & Impact Metrics (15 pts)**: XYZ formula validation (e.g. *engineered*, *automated*, *reduced latency by 45%*).
+5. **Word Count & Page Density (10 pts)**: Targets the ideal 350–750 word 1-page graduate standard.
+6. **Contact & Professional Links (10 pts)**: Professional email, phone number, GitHub repository, and LinkedIn profile.
+
+### 3. Annotated Resume & Click-to-Fix Cards
+- Displays the real parsed resume text with editorial color highlights:
+  - 🔴 **Red (Must Fix)**: Missing GitHub, outdated objectives, zero quantified metrics.
+  - 🟡 **Amber (Needs Improvement)**: Passive phrasing, weak bullets.
+  - 🟢 **Green (Strong Match)**: High-demand technical keywords.
+- Clicking any highlight opens an actionable **Fix Card**:
+  - **WHERE**: e.g. *Contact Header* or *Deep Traffic-VTS Project*
+  - **WHAT'S WRONG**: ATS rule explanation
+  - **CHANGE THIS → TO THIS**: Copyable replacement text
+  - **"Re-check"** preview showing projected score increase (+22 pts).
+  - **"Download improved resume"**: Exports an ATS-safe, clean single-column DOCX.
+
+### 4. Real Jobs Feed (Adzuna API Integration)
+- Server-side integration with Adzuna Job Search API.
+- Filter by timeframe (`24h`, `3d`, `7d` default, `30d`), location, and minimum match threshold.
+- Senior and lead roles are strictly filtered out.
+- **Honest Match Percentage**: Calculated deterministically based on verified skill overlap. Capped between 68% and 94% — **never shows a fake 100%**.
+- Local **Save Job** state persisted via `localStorage`.
+
+---
+
+## 🔒 Privacy Guarantee
+- Resumes are parsed **strictly in-memory** and **never saved** to disk or remote storage.
+
+---
+
+## 🛠️ Getting Started
+
+### 1. Prerequisites
+- Node.js 18+ (tested on Node v20 LTS)
+- npm or pnpm
+
+### 2. Setup & Installation
 ```bash
-python run_app.py
+cd fresherlaunch
+npm install
 ```
-Or with Uvicorn directly:
+
+### 3. Environment Variables
+Copy `.env.example` to `.env.local`:
 ```bash
-uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+cp .env.example .env.local
 ```
+Add your optional Adzuna API credentials:
+```env
+ADZUNA_APP_ID=your_adzuna_app_id
+ADZUNA_APP_KEY=your_adzuna_app_key
+```
+*(When omitted, FresherLaunch provides verified active graduate tech openings across India).*
+
+### 4. Run Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 📂 Project Architecture
-
-```
-Ai agent/
-├── app/
-│   ├── main.py                  # FastAPI application & REST endpoints
-│   ├── models.py                # Pydantic request & response schemas
-│   ├── resume_engine.py         # ATS scoring, file text extraction, keyword analysis
-│   └── outreach_engine.py       # Personalized recruiter outreach generator
-├── data/
-│   ├── jobs.json                # Verified dataset of 26 active positions
-│   ├── profile.json             # Sample Fresher analyzed profile & 5 target roles
-│   └── tracker.json             # Application tracking state (Saved, Applied, Notes)
-├── static/
-│   ├── css/
-│   │   └── style.css            # Custom styles & badge definitions
-│   └── js/
-│       └── app.js               # Client-side API client, reactive UI & modal logic
-├── templates/
-│   └── index.html               # Responsive single-page application dashboard
-├── Sample_Fresher_ATS_Resume.md # Optimized ATS-ready Markdown resume
-├── job_search_dashboard.html    # Standalone, portable offline HTML dashboard
-├── run_app.py                   # Python server launcher with auto-browser opening
-├── run_app.bat                  # 1-click Windows batch file
-└── README.md                    # Documentation
-```
-
----
-
-## 📡 API Endpoints
-
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/` | Serves the interactive application UI |
-| `GET` | `/docs` | Interactive Swagger API documentation |
-| `GET` | `/api/jobs` | Get jobs with query, category, track, location, and sorting filters |
-| `GET` | `/api/jobs/{id}` | Get detailed single job match analysis |
-| `POST` | `/api/jobs/{id}/status` | Update application stage (`saved`, `applied`, `interviewing`, `offers`) |
-| `POST` | `/api/jobs/{id}/note` | Save personal application notes |
-| `GET` | `/api/tracker` | Retrieve full application pipeline status |
-| `GET` | `/api/profile` | Retrieve candidate profile and 5 target roles |
-| `POST` | `/api/resume/audit-existing` | Run ATS audit on candidate's optimized resume |
-| `POST` | `/api/resume/upload` | Upload & audit any PDF, DOCX, or TXT resume |
-| `POST` | `/api/resume/match-jd` | Match candidate resume against any pasted Job Description |
-| `POST` | `/api/outreach/generate` | Generate custom LinkedIn connection note & InMail |
-| `GET` | `/api/resume/download-ats` | Download clean ATS-formatted resume (.md) |
+## 📱 Mobile-First & Accessible
+- Fully responsive across desktop (1440px) and mobile devices (375px).
+- High-contrast carbon ink on warm paper exceeds WCAG AAA readability standards.
