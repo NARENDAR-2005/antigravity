@@ -1,0 +1,8 @@
+flask
+openai
+anthropic
+python-dotenv
+imageio-ffmpeg
+Pillow
+numpy
+gunicorn; sys_platform != 'win32'

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOBO X ROBO - Sign In</title>
+    <style>
+        :root {
+            --bg-color: #FAF9F5;
+            --card-bg: #FFFFFF;
+            --text-primary: #1F1E1D;
+            --text-secondary: #6B6862;
+            --accent: #D97706;
+            --accent-hover: #B45309;
+            --btn-dark: #2E2C29;
+            --btn-dark-hover: #171615;
+            --border-color: #E6E4DE;
+            --input-bg: #FFFFFF;
+            --error-color: #DC2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px 32px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04);
+            text-align: center;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: #D97706;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+        }
+
+        .logo svg {
+            width: 26px;
+            height: 26px;
+            fill: white;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #F3F1EB;
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 13.5px;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--text-primary);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            font-weight: 600;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus {
+            border-color: #D97706;
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+        }
+
+        .btn-submit {
+            margin-top: 8px;
+            padding: 13px;
+            border-radius: 10px;
+            background: var(--btn-dark);
+            color: white;
+            font-size: 14.5px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: var(--btn-dark-hover);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .divider span {
+            padding: 0 12px;
+        }
+
+        .btn-guest {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            background: #FAF9F5;
+            color: var(--text-primary);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-guest:hover {
+            background: #F3F1EB;
+            border-color: #D4D1C7;
+        }
+
+        .error-banner {
+            display: none;
+            background: #FEF2F2;
+            border: 1px solid #FEE2E2;
+            color: var(--error-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .demo-hint {
+            margin-top: 18px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .demo-hint code {
+            background: #F3F1EB;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #2E2C29;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="logo">
+            <!-- Claude Sparkle Icon -->
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/>
+            </svg>
+        </div>
+
+        <h1>Welcome to LOBO X ROBO</h1>
+        <p class="subtitle">Chat, brainstorm, and create images with AI</p>
+
+        <div class="tabs">
+            <button id="tab-login" class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+            <button id="tab-signup" class="tab-btn" onclick="switchTab('signup')">Create Account</button>
+        </div>
+
+        <div id="error-msg" class="error-banner"></div>
+
+        <form id="auth-form" class="auth-form" onsubmit="handleSubmit(event)">
+            <div class="form-group" id="name-group" style="display: none;">
+                <label for="display_name">Your Name</label>
+                <input type="text" id="display_name" placeholder="E.g. Alex Smith">
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" id="submit-btn" class="btn-submit">Sign In</button>
+        </form>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <button type="button" class="btn-guest" onclick="handleGuestLogin()">
+            <span>⚡ Continue as Guest (Instant Access)</span>
+        </button>
+
+        <div class="demo-hint" id="demo-hint">
+            Default test account: <code>demo</code> / password: <code>demo123</code>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'login';
+
+        function switchTab(mode) {
+            currentMode = mode;
+            const tabLogin = document.getElementById('tab-login');
+            const tabSignup = document.getElementById('tab-signup');
+            const nameGroup = document.getElementById('name-group');
+            const submitBtn = document.getElementById('submit-btn');
+            const errorBanner = document.getElementById('error-msg');
+            errorBanner.style.display = 'none';
+
+            if (mode === 'login') {
+                tabLogin.classList.add('active');
+                tabSignup.classList.remove('active');
+                nameGroup.style.display = 'none';
+                submitBtn.textContent = 'Sign In';
+            } else {
+                tabSignup.classList.add('active');
+                tabLogin.classList.remove('active');
+                nameGroup.style.display = 'flex';
+                submitBtn.textContent = 'Create Account';
+            }
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const displayName = document.getElementById('display_name').value.trim();
+            const errorBanner = document.getElementById('error-msg');
+            const submitBtn = document.getElementById('submit-btn');
+
+            errorBanner.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Please wait...';
+
+            const endpoint = currentMode === 'login' ? '/api/auth/login' : '/api/auth/signup';
+            const body = { username, password };
+            if (currentMode === 'signup' && displayName) {
+                body.display_name = displayName;
+            }
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    window.location.href = '/';
+                } else {
+                    errorBanner.textContent = data.error || 'Authentication failed. Please try again.';
+                    errorBanner.style.display = 'block';
+                }
+            } catch (err) {
+                errorBanner.textContent = 'Could not reach server. Check that it is running.';
+                errorBanner.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = currentMode === 'login' ? 'Sign In' : 'Create Account';
+            }
+        }
+
+        async function handleGuestLogin() {
+            const errorBanner = document.getElementById('error-msg');
+            errorBanner.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/auth/guest', { method: 'POST' });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    window.location.href = '/';
+                } else {
+                    errorBanner.textContent = data.error || 'Guest login failed.';
+                    errorBanner.style.display = 'block';
+                }
+            } catch (err) {
+                errorBanner.textContent = 'Could not reach server.';
+                errorBanner.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

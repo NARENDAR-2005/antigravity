@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+taskbot.db
+taskbot.db-wal
+taskbot.db-shm
+static/generated/*
+!static/generated/.gitkeep
